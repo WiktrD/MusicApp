@@ -1,4 +1,4 @@
-package com.example.musicproject.fragmentsModels.mainmenu;
+package com.example.musicproject.fragmentsModels.MainMenu;
 
 import androidx.lifecycle.ViewModelProvider;
 
