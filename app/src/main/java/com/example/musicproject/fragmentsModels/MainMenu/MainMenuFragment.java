@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.musicproject.R;
 
@@ -33,7 +34,13 @@ public class MainMenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_menu, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_menu,container,false);
+        Button buttonPlay= view.findViewById(R.id.button_play);
+        Button buttonScore= view.findViewById(R.id.button_scores);
+        Button buttonSettings= view.findViewById(R.id.button_settings);
+        Button buttonQuit= view.findViewById(R.id.button_exit);
+        return view;
+
     }
 
 }
