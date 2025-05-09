@@ -16,7 +16,7 @@ import com.example.musicproject.R;
 
 public class MainMenuFragment extends Fragment {
 
-    private com.example.musicproject.fragmentsModels.mainmenu.MainMenuViewModel mViewModel;
+    private com.example.musicproject.fragmentsModels.MainMenu.MainMenuViewModel mViewModel;
 
     public static MainMenuFragment newInstance() {
         return new MainMenuFragment();
@@ -25,7 +25,7 @@ public class MainMenuFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(com.example.musicproject.fragmentsModels.mainmenu.MainMenuViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(com.example.musicproject.fragmentsModels.MainMenu.MainMenuViewModel.class);
         // TODO: Use the ViewModel
     }
 
