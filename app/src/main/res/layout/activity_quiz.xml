@@ -1,7 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameActivity" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_gradient">
+
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/atmusic"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"/>
+
+    <TextView
+        android:id="@+id/question_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pytanie..."
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:fontFamily="@font/urban_font"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/logo_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp"/>
+
+    <RadioGroup
+        android:id="@+id/answer_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/question_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp">
+
+        <RadioButton
+            android:id="@+id/answer_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opcja 1"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"/>
+
+        <RadioButton
+            android:id="@+id/answer_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opcja 2"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"/>
+
+        <RadioButton
+            android:id="@+id/answer_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opcja 3"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"/>
+
+        <RadioButton
+            android:id="@+id/answer_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opcja 4"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dalej"
+        android:textSize="20sp"
+        android:background="@drawable/button_style"
+        android:fontFamily="@font/urban_font"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/answer_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"/>
+
+
+
+    <TextView
+        android:id="@+id/footer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Created by Dziker and Wojtas"
+        android:textSize="14sp"
+        android:textColor="#B5BEC8"
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
