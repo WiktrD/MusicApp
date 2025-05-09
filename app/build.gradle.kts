@@ -31,6 +31,7 @@ android {
     }
 }
 
+
 dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
@@ -40,6 +41,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(files("src/main/libs/MidiDriver-1.26.aar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

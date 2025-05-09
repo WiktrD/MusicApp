@@ -13,4 +13,10 @@ public class GameManager {
     public boolean checkNoteAnswer(String correctNote, String userAnswer) {
         return correctNote != null && correctNote.equalsIgnoreCase(userAnswer);
     }
+    public String generateQuizQuestion() {
+        return "What is the note of this symbol?"; // przykład
+    }
+    public boolean checkQuizAnswer(String answer) {
+        return answer.equalsIgnoreCase("C"); // przykładowa odpowiedź
+    }
 }

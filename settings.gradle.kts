@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MusicProject"
 include(":app")
- 
+include(":MidiDriver")
