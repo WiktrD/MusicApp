@@ -2,17 +2,20 @@ package com.example.musicproject.fragmentsModels.MainMenu;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.musicproject.GameActivity;
 import com.example.musicproject.R;
 
 public class MainMenuFragment extends Fragment {
@@ -39,6 +42,13 @@ public class MainMenuFragment extends Fragment {
         Button buttonScore= view.findViewById(R.id.button_scores);
         Button buttonSettings= view.findViewById(R.id.button_settings);
         Button buttonQuit= view.findViewById(R.id.button_exit);
+        buttonPlay.setOnClickListener(v->{
+            Intent intent = new Intent(requireContext(), GameActivity.class);
+            startActivity(intent);
+        });
+        //buttonQuit.setOnClickListener();
+        //buttonSettings.setOnClickListener();
+        //buttonScore.setOnClickListener();
         return view;
 
     }

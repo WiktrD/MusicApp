@@ -6,32 +6,33 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.musicproject.managers.SoundManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PianoViewModel extends ViewModel {
-    private final MutableLiveData<List<String>> pressedKeys = new MutableLiveData<>(new ArrayList<>());
     private final SoundManager soundManager;
+    private final MutableLiveData<String> playedNote;
 
     public PianoViewModel() {
         soundManager = new SoundManager();
+        playedNote = new MutableLiveData<>();
     }
 
-    public LiveData<List<String>> getPressedKeys() {
-        return pressedKeys;
+    public void playNote(int midiNote) {
+        soundManager.playNote( midiNote);
+        playedNote.setValue(String.valueOf(midiNote));
+    }
+    public void stopNote(int midiNote) {
+        soundManager.stopNote(midiNote);
     }
 
-    public void pressKey(String note) {
-        List<String> currentKeys = pressedKeys.getValue();
-        if (currentKeys == null) return;
-
-        currentKeys.add(note);
-        pressedKeys.setValue(currentKeys);
-
-        //soundManager.playNote(note); // Gra dźwięk
+    public LiveData<String> getPlayedNote() {
+        return playedNote;
     }
 
-    public void clearKeys() {
-        pressedKeys.setValue(new ArrayList<>());
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        soundManager.stop();
+    }
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 }
