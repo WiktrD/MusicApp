@@ -21,9 +21,9 @@ public class GameFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_game, container, false);
 
-        Button pianoButton = view.findViewById(R.id.button_piano);
-        Button staffButton = view.findViewById(R.id.button_stave);
-        Button quizButton = view.findViewById(R.id.button_quiz);
+        Button pianoButton = view.findViewById(R.id.language_right);
+        Button staffButton = view.findViewById(R.id.button_instruments_settings);
+        Button quizButton = view.findViewById(R.id.button_language_settings);
 
         pianoButton.setOnClickListener(v -> openGame("piano"));
         staffButton.setOnClickListener(v -> openGame("staff"));
