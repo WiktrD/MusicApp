@@ -3,6 +3,7 @@ package com.example.musicproject.managers;
 import java.util.Random;
 
 public class GameManager {
+
     private final String[] notes = {"C", "D", "E", "F", "G", "A", "B"};
 
     public String generateRandomNote() {

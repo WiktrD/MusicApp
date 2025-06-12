@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.atmusic.PianoView
@@ -15,7 +16,8 @@ class PianoFragment : Fragment() {
     private lateinit var viewModel: PianoViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_piano, container, false)
@@ -25,6 +27,51 @@ class PianoFragment : Fragment() {
         pianoView.setOnKeyPressedListener { note ->
             viewModel.playNote(note)
         }
+        pianoView.setOnKeyReleasedListener { midiNote ->
+            viewModel.stopNote(midiNote)
+        }
         return view
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Wszystkie operacje na widoku tutaj!
+        val correctText = view.findViewById<TextView>(R.id.correct_note)
+        val incorrectText = view.findViewById<TextView>(R.id.wrong_note)
+        val noteText = view.findViewById<TextView>(R.id.random_note)
+        val pianoView = view.findViewById<PianoView>(R.id.piano_view)
+
+        viewModel = ViewModelProvider(this)[PianoViewModel::class.java]
+        pianoView.viewModel = viewModel
+
+        viewModel.targetNoteLive.observe(viewLifecycleOwner) { midi ->
+            noteText.text = "Zagraj nutę: ${midiToNoteName(midi)}"
+        }
+
+
+        viewModel.correctCountLive.observe(viewLifecycleOwner) { correct ->
+            correctText.text = "$correct"
+        }
+
+        viewModel.incorrectCountLive.observe(viewLifecycleOwner) { incorrect ->
+            incorrectText.text = "$incorrect"
+        }
+
+        pianoView.setOnKeyPressedListener { midiNote ->
+            viewModel.checkNote(midiNote)
+            viewModel.playNote(midiNote)
+        }
+    }
+
+    private fun updateScoreText(scoreText: TextView) {
+        val correct = viewModel.correctCountLive.value ?: 0
+        val incorrect = viewModel.incorrectCountLive.value ?: 0
+    }
+
+    private fun midiToNoteName(midi: Int): String {
+        val noteNames = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
+        val note = noteNames[midi % 12]
+        val octave = midi / 12 - 1
+        return "$note$octave"
     }
 }

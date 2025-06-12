@@ -23,11 +23,13 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     var viewModel: PianoViewModel? = null
     private var onKeyPressedListener: ((Int) -> Unit)? = null
-
     fun setOnKeyPressedListener(listener: (Int) -> Unit) {
         this.onKeyPressedListener = listener
     }
-
+    private var onKeyReleasedListener: ((Int) -> Unit)? = null
+    fun setOnKeyReleasedListener(listener: (Int) -> Unit) {
+        onKeyReleasedListener = listener
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -90,6 +92,18 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             }
 
             MotionEvent.ACTION_UP -> {
+                pressedKeyIndex?.let { index ->
+                    val midiNote = if (index >= 100) {
+                        mapBlackKeyToMidi(index - 100)
+                    } else {
+                        mapWhiteKeyToMidi(index)
+                    }
+
+                    postDelayed({
+                        onKeyReleasedListener?.invoke(midiNote)
+                    }, 200)
+                }
+
                 pressedKeyIndex = null
                 invalidate()
             }

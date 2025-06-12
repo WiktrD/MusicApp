@@ -5,14 +5,23 @@ import android.util.Log;
 
 import org.billthefarmer.mididriver.MidiDriver;
 public class SoundManager implements MidiDriver.OnMidiStartListener {
+    private static SoundManager instance;
+
     private MidiDriver midi;
-    volatile int volume;
+    int volume = 100;
+
     public SoundManager() {
         midi = MidiDriver.getInstance(this);
         midi.setOnMidiStartListener(this);
         midi.start();
     }
 
+    public static synchronized  SoundManager getInstance() {
+        if (instance == null) {
+            instance = new SoundManager();
+        }
+        return instance;
+    }
     public void playNote(int note) {
         byte[] msg = new byte[3];
         msg[0] = (byte) 0x90; // NOTE_ON na kanale 0
@@ -55,6 +64,18 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
             default: return -1;
         }
     }
+    public void changeInstrument(int programNumber) {
+        if (programNumber < 0 || programNumber > 127) {
+            Log.w("MIDI", "Invalid instrument number: " + programNumber);
+            return;
+        }
+
+        byte[] msg = new byte[2];
+        msg[0] = (byte) 0xC0; // PROGRAM_CHANGE
+        msg[1] = (byte) programNumber;
+        midi.write(msg);
+        Log.d("MIDI", "Instrument changed to: " + programNumber);
+    }
     public void onMidiStart() {
         byte[] msg = new byte[2];
         msg[0] = (byte) 0xC0; // PROGRAM_CHANGE
@@ -62,5 +83,7 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
         midi.write(msg);
         Log.d("MIDI", "Instrument set");
     }
-
+    public void setVolume(int val){
+        this.volume=val;
+    }
 }

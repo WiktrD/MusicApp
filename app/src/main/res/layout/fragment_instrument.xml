@@ -36,7 +36,7 @@
         android:layout_marginTop="25dp"/>
 
     <Button
-        android:id="@+id/language_right"
+        android:id="@+id/button_piano"
         android:layout_width="73dp"
         android:layout_height="60dp"
         android:layout_marginTop="232dp"
@@ -67,16 +67,29 @@
         app:layout_constraintTop_toBottomOf="@id/logo_image" />
 
     <Button
-        android:id="@+id/language_left"
+        android:id="@+id/button_guitar"
         android:layout_width="73dp"
         android:layout_height="60dp"
         android:layout_marginTop="232dp"
         android:background="@drawable/button_style"
         android:fontFamily="@font/urban_font"
-        android:text="l"
+        android:text="g"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.227"
+        app:layout_constraintTop_toBottomOf="@id/logo_image"
+        app:layout_constraintWidth_percent="0.7" />
+
+    <Button
+        android:id="@+id/button_flute"
+        android:layout_width="73dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="232dp"
+        android:background="@drawable/button_style"
+        android:fontFamily="@font/urban_font"
+        android:text="f"
+        android:textSize="26sp"
+        app:layout_constraintHorizontal_bias="0.235"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo_image"
         app:layout_constraintWidth_percent="0.7" />
