@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.legacy.support.v4)
     testImplementation(libs.junit)
+    implementation("com.airbnb.android:lottie:6.3.0")
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }

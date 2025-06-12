@@ -38,6 +38,8 @@
     <string name="instrument_string_option_4">Opcja 4</string>
     <string name="instrument_string_next">Dalej</string>
     <string name="note_question_string">Jaka nuta ma ten symbol?</string>
+    <string name="play_string">Zagraj</string>
+    <string name="accept_string">Akceptuj</string>
 
 
     <!-- Quiz Questions -->

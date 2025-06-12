@@ -38,6 +38,8 @@
     <string name="instrument_string_option_4">Option 4</string>
     <string name="instrument_string_next">Weiter</string>
     <string name="note_question_string">Welche Note hat dieses Symbol?</string>
+    <string name="play_string">Spiel</string>
+    <string name="accept_string">Akzeptieren</string>
 
 
     <string name="quiz_q1">Was ist ein Akkord?</string>

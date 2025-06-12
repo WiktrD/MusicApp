@@ -38,6 +38,8 @@
     <string name="instrument_string_option_4">Option 4</string>
     <string name="instrument_string_next">Next</string>
     <string name="note_question_string">What is the note of this symbol?</string>
+    <string name="play_string">Play</string>
+    <string name="accept_string">Accept</string>
 
 
     <string name="quiz_q1">What is a chord?</string>

@@ -61,6 +61,7 @@
         app:layout_constraintWidth_percent="0.7"
         android:layout_marginTop="20dp"/>
 
+
     <TextView
         android:id="@+id/footer_text"
         android:layout_width="wrap_content"
@@ -75,4 +76,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp"/>
 
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
