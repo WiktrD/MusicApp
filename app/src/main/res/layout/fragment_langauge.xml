@@ -36,7 +36,7 @@
         android:layout_marginTop="25dp"/>
 
     <Button
-        android:id="@+id/language_pl"
+        android:id="@+id/instrument_organs_button"
         android:layout_width="73dp"
         android:layout_height="60dp"
         android:layout_marginTop="232dp"
@@ -52,7 +52,7 @@
 
 
     <Button
-        android:id="@+id/language_eng"
+        android:id="@+id/instrument_piano_button"
         android:layout_width="92dp"
         android:layout_height="54dp"
         android:layout_marginTop="232dp"
@@ -75,9 +75,9 @@
         android:fontFamily="@font/urban_font"
         android:text="ger"
         android:textSize="26sp"
-        app:layout_constraintEnd_toStartOf="@+id/language_pl"
+        app:layout_constraintEnd_toStartOf="@+id/instrument_organs_button"
         app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toEndOf="@+id/language_eng"
+        app:layout_constraintStart_toEndOf="@+id/instrument_piano_button"
         app:layout_constraintTop_toBottomOf="@id/logo_image"
         app:layout_constraintWidth_percent="0.7" />
 

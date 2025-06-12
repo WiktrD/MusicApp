@@ -7,6 +7,72 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_gradient"
+        tools:layout_editor_absoluteX="-150dp"
+        tools:layout_editor_absoluteY="0dp">
+
+
+        <Button
+            android:id="@+id/instrument_organs_button"
+            android:layout_width="191dp"
+            android:layout_height="54dp"
+            android:background="@drawable/button_style"
+            android:fontFamily="@font/urban_font"
+            android:text="Organy"
+            android:textSize="26sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instrument_piano_button"
+            app:layout_constraintWidth_percent="0.7" />
+
+        <Button
+            android:id="@+id/instrument_piano_button"
+            android:layout_width="180dp"
+            android:layout_height="57dp"
+            android:background="@drawable/button_style"
+            android:fontFamily="@font/urban_font"
+            android:text="Pianino"
+            android:textSize="26sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.7"
+            tools:layout_editor_absoluteY="433dp" />
+
+        <Button
+            android:id="@+id/language_ger"
+            android:layout_width="87dp"
+            android:layout_height="54dp"
+            android:background="@drawable/button_style"
+            android:fontFamily="@font/urban_font"
+            android:text="ger"
+            android:textSize="26sp"
+            app:layout_constraintEnd_toStartOf="@+id/instrument_organs_button"
+            app:layout_constraintHorizontal_bias="0.375"
+            app:layout_constraintStart_toEndOf="@+id/instrument_piano_button"
+            app:layout_constraintWidth_percent="0.7" />
+
+        <Button
+            android:id="@+id/instrument_xylofon_button"
+            android:layout_width="186dp"
+            android:layout_height="59dp"
+            android:background="@drawable/button_style"
+            android:fontFamily="@font/urban_font"
+            android:text="Ksylofon"
+            android:textSize="26sp"
+            app:layout_constraintBottom_toTopOf="@+id/instrument_organs_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instrument_piano_button"
+            app:layout_constraintVertical_bias="0.485"
+            app:layout_constraintWidth_percent="0.7" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/language_choice"
         android:layout_width="256dp"
@@ -34,52 +100,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="25dp"/>
-
-    <Button
-        android:id="@+id/language_right"
-        android:layout_width="73dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="232dp"
-        android:background="@drawable/button_style"
-        android:fontFamily="@font/urban_font"
-        android:text="p"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.769"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_image"
-        app:layout_constraintWidth_percent="0.7" />
-
-    <TextView
-        android:id="@+id/language_name"
-        android:layout_width="90dp"
-        android:layout_height="89dp"
-        android:layout_marginTop="144dp"
-        android:fontFamily="@font/urban_font"
-        android:gravity="center"
-        android:text="x"
-        android:textColor="#21B9FF"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_image" />
-
-    <Button
-        android:id="@+id/language_left"
-        android:layout_width="73dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="232dp"
-        android:background="@drawable/button_style"
-        android:fontFamily="@font/urban_font"
-        android:text="l"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.227"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_image"
-        app:layout_constraintWidth_percent="0.7" />
 
     <TextView
         android:id="@+id/footer_text"
