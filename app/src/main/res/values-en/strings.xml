@@ -1,0 +1,133 @@
+<resources>
+    <string name="app_name">MusicAT</string>
+    <string name="piano_string">Piano</string>
+    <string name="staff_string">Staff</string>
+    <string name="quiz_string">Quiz</string>
+    <string name="xylofon_string">Xylophone</string>
+    <string name="organs_string">Organ</string>
+    <string name="instrument_string">Instrument</string>
+    <string name="instrument_string_play">Play</string>
+    <string name="instrument_string_scores">Scores</string>
+    <string name="instrument_string_settings">Settings</string>
+    <string name="instrument_string_exit">Exit</string>
+    <string name="instrument_string_footer">Created by Dziker and Wojtas</string>
+    <string name="instrument_string_prompt">Please press a key on the piano:</string>
+    <string name="instrument_string_wrong">Incorrect:</string>
+    <string name="instrument_string_correct">Correct:</string>
+    <string name="instrument_string_stave_title">Staff:</string>
+    <string name="instrument_string_quiz_title">Quiz:</string>
+    <string name="instrument_string_piano_title">Piano:</string>
+    <string name="instrument_string_best_scores">Best scores:</string>
+    <string name="instrument_string_result_label">Answer&#10;accuracy [%]</string>
+    <string name="instrument_string_result_value">x%</string>
+    <string name="instrument_string_reset">Reset</string>
+    <string name="instrument_string_sound_settings">Sound settings</string>
+    <string name="instrument_string_instrument_settings">Instrument settings</string>
+    <string name="instrument_string_language_settings">Language settings</string>
+    <string name="instrument_string_volume">Volume: 50%</string>
+    <string name="instrument_string_mute">mute</string>
+    <string name="instrument_string_stave_prompt">Please select the note on the staff:</string>
+    <string name="instrument_string_language">Language</string>
+    <string name="instrument_string_lang_pl">pl</string>
+    <string name="instrument_string_lang_en">en</string>
+    <string name="instrument_string_lang_de">de</string>
+    <string name="instrument_string_question">Question...</string>
+    <string name="instrument_string_option_1">Option 1</string>
+    <string name="instrument_string_option_2">Option 2</string>
+    <string name="instrument_string_option_3">Option 3</string>
+    <string name="instrument_string_option_4">Option 4</string>
+    <string name="instrument_string_next">Next</string>
+    <string name="note_question_string">What is the note of this symbol?</string>
+
+
+    <string name="quiz_q1">What is a chord?</string>
+    <string name="quiz_q1_a">A rhythmic notation</string>
+    <string name="quiz_q1_b">A group of three or more notes played at the same time</string>
+    <string name="quiz_q1_c">A pause in music</string>
+    <string name="quiz_q1_d">A musical instrument</string>
+
+    <string name="quiz_q2">How many strings does a classical guitar have?</string>
+    <string name="quiz_q2_a">4</string>
+    <string name="quiz_q2_b">5</string>
+    <string name="quiz_q2_c">6</string>
+    <string name="quiz_q2_d">8</string>
+
+    <string name="quiz_q3">Which note is between C and E?</string>
+    <string name="quiz_q3_a">F</string>
+    <string name="quiz_q3_b">G</string>
+    <string name="quiz_q3_c">D</string>
+    <string name="quiz_q3_d">B</string>
+
+    <string name="quiz_q4">Which clef is most commonly used for piano?</string>
+    <string name="quiz_q4_a">Bass</string>
+    <string name="quiz_q4_b">Alto</string>
+    <string name="quiz_q4_c">Treble</string>
+    <string name="quiz_q4_d">C-clef</string>
+
+    <string name="quiz_q5">What is the symbol that raises a note by a half step?</string>
+    <string name="quiz_q5_a">Flat</string>
+    <string name="quiz_q5_b">Rest</string>
+    <string name="quiz_q5_c">Sharp</string>
+    <string name="quiz_q5_d">Fermata</string>
+
+    <string name="quiz_q6">How many notes are in an octave?</string>
+    <string name="quiz_q6_a">12</string>
+    <string name="quiz_q6_b">10</string>
+    <string name="quiz_q6_c">7</string>
+    <string name="quiz_q6_d">5</string>
+
+    <string name="quiz_q7">What is the staff with the treble clef called?</string>
+    <string name="quiz_q7_a">Scale</string>
+    <string name="quiz_q7_b">Chord</string>
+    <string name="quiz_q7_c">Treble staff</string>
+    <string name="quiz_q7_d">Major scale</string>
+
+    <string name="quiz_q8">Which of these instruments is a wind instrument?</string>
+    <string name="quiz_q8_a">Guitar</string>
+    <string name="quiz_q8_b">Saxophone</string>
+    <string name="quiz_q8_c">Piano</string>
+    <string name="quiz_q8_d">Snare drum</string>
+
+    <string name="quiz_q9">What does BPM stand for?</string>
+    <string name="quiz_q9_a">Bit per mix</string>
+    <string name="quiz_q9_b">Beats per minute</string>
+    <string name="quiz_q9_c">Bass per module</string>
+    <string name="quiz_q9_d">Bars per measure</string>
+
+    <string name="quiz_q10">What is the first white key on the left of a piano?</string>
+    <string name="quiz_q10_a">C</string>
+    <string name="quiz_q10_b">A</string>
+    <string name="quiz_q10_c">G</string>
+    <string name="quiz_q10_d">D</string>
+
+    <string name="quiz_q11">Which notes make up a C major chord?</string>
+    <string name="quiz_q11_a">C, E, G</string>
+    <string name="quiz_q11_b">C, D, F</string>
+    <string name="quiz_q11_c">D, F, A</string>
+    <string name="quiz_q11_d">A, C, E</string>
+
+    <string name="quiz_q12">Which instrument has pedals?</string>
+    <string name="quiz_q12_a">Organ</string>
+    <string name="quiz_q12_b">Violin</string>
+    <string name="quiz_q12_c">Flute</string>
+    <string name="quiz_q12_d">Trumpet</string>
+
+    <string name="quiz_q13">What does the ♪ symbol represent?</string>
+    <string name="quiz_q13_a">Rest</string>
+    <string name="quiz_q13_b">Fermata</string>
+    <string name="quiz_q13_c">Eighth note</string>
+    <string name="quiz_q13_d">Sharp</string>
+
+    <string name="quiz_q14">What is the difference between a note and a rest?</string>
+    <string name="quiz_q14_a">A rest lasts longer</string>
+    <string name="quiz_q14_b">A note is sound, a rest is silence</string>
+    <string name="quiz_q14_c">A rest is higher</string>
+    <string name="quiz_q14_d">Rests only occur at the end</string>
+
+    <string name="quiz_q15">Which instrument belongs to the percussion family?</string>
+    <string name="quiz_q15_a">Snare drum</string>
+    <string name="quiz_q15_b">Double bass</string>
+    <string name="quiz_q15_c">Saxophone</string>
+    <string name="quiz_q15_d">Cello</string>
+
+</resources>
