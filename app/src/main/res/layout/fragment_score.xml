@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:layout_marginTop="300dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="Pięciolinia:"
+        android:text="@string/instrument_string_stave_title"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -30,7 +29,7 @@
         android:layout_marginTop="340dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="Quiz:"
+        android:text="@string/instrument_string_quiz_title"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -46,7 +45,7 @@
         android:layout_marginTop="260dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="Pianino:"
+        android:text="@string/instrument_string_piano_title"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -65,8 +64,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="25dp"/>
-
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:id="@+id/note_display"
@@ -75,7 +73,7 @@
         android:layout_marginTop="192dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="Najlepsze wyniki:"
+        android:text="@string/instrument_string_best_scores"
         android:textColor="@android:color/white"
         android:textSize="34sp"
         android:textStyle="bold"
@@ -91,7 +89,7 @@
         android:layout_marginTop="28dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="Poprawność\nodpowiedzi[%]"
+        android:text="@string/instrument_string_result_label"
         android:textColor="@android:color/white"
         android:textSize="34sp"
         android:textStyle="bold"
@@ -106,7 +104,7 @@
         android:layout_marginTop="120dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="x%"
+        android:text="@string/instrument_string_result_value"
         android:textColor="#ED5656"
         android:textSize="34sp"
         android:textStyle="bold"
@@ -121,7 +119,7 @@
         android:layout_marginTop="260dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="x"
+        android:text="@string/instrument_string_result_value"
         android:textColor="#21B9FF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -137,7 +135,7 @@
         android:layout_marginTop="300dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="x"
+        android:text="@string/instrument_string_result_value"
         android:textColor="#21B9FF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -153,7 +151,7 @@
         android:layout_marginTop="340dp"
         android:fontFamily="@font/urban_font"
         android:gravity="center"
-        android:text="x"
+        android:text="@string/instrument_string_result_value"
         android:textColor="#21B9FF"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -166,7 +164,7 @@
         android:id="@+id/footer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Created by Dziker and Wojtas"
+        android:text="@string/instrument_string_footer"
         android:textSize="14sp"
         android:textColor="#B5BEC8"
         android:textStyle="italic"
@@ -174,8 +172,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"/>
-
+        android:layout_marginBottom="16dp" />
 
     <Button
         android:id="@+id/button_backToMenu"
@@ -183,7 +180,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_style"
         android:fontFamily="@font/urban_font"
-        android:text="Reset"
+        android:text="@string/instrument_string_reset"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -192,4 +189,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.898" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,7 +22,7 @@
         android:id="@+id/question_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pytanie..."
+        android:text="@string/instrument_string_question"
         android:textSize="24sp"
         android:textColor="@android:color/white"
         android:fontFamily="@font/urban_font"
@@ -48,7 +47,7 @@
             android:id="@+id/answer_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Opcja 1"
+            android:text="@string/instrument_string_option_1"
             android:textSize="18sp"
             android:textColor="@android:color/white"/>
 
@@ -56,7 +55,7 @@
             android:id="@+id/answer_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Opcja 2"
+            android:text="@string/instrument_string_option_2"
             android:textSize="18sp"
             android:textColor="@android:color/white"/>
 
@@ -64,7 +63,7 @@
             android:id="@+id/answer_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Opcja 3"
+            android:text="@string/instrument_string_option_3"
             android:textSize="18sp"
             android:textColor="@android:color/white"/>
 
@@ -72,7 +71,7 @@
             android:id="@+id/answer_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Opcja 4"
+            android:text="@string/instrument_string_option_4"
             android:textSize="18sp"
             android:textColor="@android:color/white"/>
     </RadioGroup>
@@ -81,7 +80,7 @@
         android:id="@+id/button_backToMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dalej"
+        android:text="@string/instrument_string_next"
         android:textSize="20sp"
         android:background="@drawable/button_style"
         android:fontFamily="@font/urban_font"
@@ -91,13 +90,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="30dp"/>
 
-
-
     <TextView
         android:id="@+id/footer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Created by Dziker and Wojtas"
+        android:text="@string/instrument_string_footer"
         android:textSize="14sp"
         android:textColor="#B5BEC8"
         android:textStyle="italic"
@@ -106,7 +103,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp"/>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
