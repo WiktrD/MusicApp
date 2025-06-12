@@ -6,7 +6,7 @@ import android.util.Log;
 import org.billthefarmer.mididriver.MidiDriver;
 public class SoundManager implements MidiDriver.OnMidiStartListener {
     private MidiDriver midi;
-
+    volatile int volume;
     public SoundManager() {
         midi = MidiDriver.getInstance(this);
         midi.setOnMidiStartListener(this);
@@ -17,7 +17,7 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
         byte[] msg = new byte[3];
         msg[0] = (byte) 0x90; // NOTE_ON na kanale 0
         msg[1] = (byte) note; // numer nuty
-        msg[2] = (byte) 127;  // głośność maksymalna
+        msg[2] = (byte) (127*volume/100);  // głośność maksymalna
         midi.write(msg);
         Log.d("MIDI", "Note ON: " + note);
     }

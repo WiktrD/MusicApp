@@ -1,4 +1,4 @@
-package com.example.musicproject.fragmentsModels.piano;
+package com.example.musicproject.fragmentsModels.Game.piano;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

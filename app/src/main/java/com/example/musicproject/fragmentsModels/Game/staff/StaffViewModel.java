@@ -1,4 +1,4 @@
-package com.example.musicproject.fragmentsModels.staff;
+package com.example.musicproject.fragmentsModels.Game.staff;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

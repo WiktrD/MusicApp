@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,11 @@ import android.widget.Button;
 
 import com.example.musicproject.GameActivity;
 import com.example.musicproject.R;
+import com.example.musicproject.fragmentsModels.MainMenu.score.scoreFragment;
+import com.example.musicproject.fragmentsModels.MainMenu.settings.instruments.instrumentFragment;
+import com.example.musicproject.fragmentsModels.MainMenu.settings.langauge.langaugeFragment;
+import com.example.musicproject.fragmentsModels.MainMenu.settings.settingsFragment;
+import com.example.musicproject.fragmentsModels.MainMenu.settings.sound.soundFragment;
 
 public class MainMenuFragment extends Fragment {
 
@@ -46,11 +50,32 @@ public class MainMenuFragment extends Fragment {
             Intent intent = new Intent(requireContext(), GameActivity.class);
             startActivity(intent);
         });
-        //buttonQuit.setOnClickListener();
-        //buttonSettings.setOnClickListener();
-        //buttonScore.setOnClickListener();
+        buttonSettings.setOnClickListener(v -> openFragment("settings"));
+        buttonScore.setOnClickListener(v -> openFragment("results"));
+        buttonQuit.setOnClickListener(v -> requireActivity().finishAffinity());
+
         return view;
 
     }
 
-}
+    private void openFragment(String type) {
+        Fragment fragment;
+
+        switch (type) {
+            case "settings":
+                fragment = new settingsFragment();
+                break;
+            case "results":
+                fragment = new scoreFragment();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown fragment type: " + type);
+        }  requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    }

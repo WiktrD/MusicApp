@@ -8,7 +8,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.example.musicproject.fragmentsModels.piano.PianoViewModel
+import com.example.musicproject.fragmentsModels.Game.piano.PianoViewModel
 
 class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 

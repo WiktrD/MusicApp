@@ -1,4 +1,4 @@
-package com.example.musicproject.fragmentsModels.settings;
+package com.example.musicproject.fragmentsModels.MainMenu.settings;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

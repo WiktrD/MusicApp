@@ -6,7 +6,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.musicproject.fragmentsModels.GameMenu.GameFragment;
+import com.example.musicproject.fragmentsModels.Game.GameFragment;
 public class GameActivity extends AppCompatActivity {
 
     @Override

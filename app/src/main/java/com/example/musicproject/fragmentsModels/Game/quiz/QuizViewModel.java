@@ -1,4 +1,4 @@
-package com.example.musicproject.fragmentsModels.quiz;
+package com.example.musicproject.fragmentsModels.Game.quiz;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

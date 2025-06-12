@@ -1,4 +1,4 @@
-package com.example.musicproject.fragmentsModels.GameMenu;
+package com.example.musicproject.fragmentsModels.Game;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.musicproject.R;
-import com.example.musicproject.fragmentsModels.piano.PianoFragment;
-import com.example.musicproject.fragmentsModels.quiz.quizFragment;
-import com.example.musicproject.fragmentsModels.staff.staffFragment;
+import com.example.musicproject.fragmentsModels.Game.piano.PianoFragment;
+import com.example.musicproject.fragmentsModels.Game.quiz.quizFragment;
+import com.example.musicproject.fragmentsModels.Game.staff.staffFragment;
 
 public class GameFragment extends Fragment {
     @Nullable
