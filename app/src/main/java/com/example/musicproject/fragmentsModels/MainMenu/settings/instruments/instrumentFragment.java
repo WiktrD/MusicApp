@@ -31,9 +31,9 @@ public class instrumentFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(InstrumentViewModel.class);
 
-        Button pianoButton = view.findViewById(R.id.button_piano);
-        Button guitarButton = view.findViewById(R.id.button_guitar);
-        Button fluteButton = view.findViewById(R.id.button_flute);
+        Button pianoButton = view.findViewById(R.id.instrument_piano_button);
+        Button guitarButton = view.findViewById(R.id.instrument_xylofon_button);
+        Button fluteButton = view.findViewById(R.id.instrument_organs_button);
 
         pianoButton.setOnClickListener(v -> viewModel.setInstrument(0));   // Grand Piano
         guitarButton.setOnClickListener(v -> viewModel.setInstrument(13)); // Xylophone
