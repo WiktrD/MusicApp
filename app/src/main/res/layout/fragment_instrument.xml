@@ -16,6 +16,7 @@
 
 
         <Button
+            android:radius="20dp"
             android:id="@+id/instrument_xylofon_button"
             android:layout_width="186dp"
             android:layout_height="59dp"
@@ -31,6 +32,7 @@
             app:layout_constraintWidth_percent="0.7" />
 
         <Button
+            android:radius="20dp"
             android:id="@+id/instrument_piano_button"
             android:layout_width="180dp"
             android:layout_height="0dp"
@@ -46,6 +48,8 @@
             app:layout_constraintWidth_percent="0.7" />
 
         <Button
+            android:radius="20dp"
+
             android:id="@+id/instrument_organs_button"
             android:layout_width="191dp"
             android:layout_height="54dp"

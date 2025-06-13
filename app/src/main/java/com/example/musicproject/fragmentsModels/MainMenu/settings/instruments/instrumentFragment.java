@@ -51,10 +51,8 @@ public class instrumentFragment extends Fragment {
     private void updateButtonStyles(Button button, boolean isSelected) {
         if (isSelected) {
             button.setAlpha(1.0f);
-            button.setBackgroundColor(getResources().getColor(R.color.teal_200, null)); // lub inny kolor
         } else {
             button.setAlpha(0.5f);
-            button.setBackgroundColor(getResources().getColor(R.color.gray, null));
         }
     }
 

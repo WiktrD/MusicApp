@@ -86,4 +86,14 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
     public void setVolume(int val){
         this.volume=val;
     }
+    public void playNoteByName(String noteName,int delay) {
+        int midiNote = convertNoteToMidiValue(noteName);
+        if (midiNote != -1) {
+            playNote(midiNote);
+
+            new android.os.Handler().postDelayed(() -> stopNote(midiNote), delay);
+        } else {
+            Log.w("SoundManager", "Nieznana nuta: " + noteName);
+        }
+    }
 }
