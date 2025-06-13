@@ -147,6 +147,16 @@
     <string name="quiz_q13_correct">3</string>
     <string name="quiz_q14_correct">2</string>
     <string name="quiz_q15_correct">1</string>
+    <string name="submit">nächste</string>
+    <string name="end_message">Spiel beendet! Ergebnis: %1$d%%</string>
+    <string name="correct_answer">✅ Richtig!</string>
+    <string name="incorrect_answer">❌ Falsch, versuche es erneut</string>
+    <string name="select_answer">Bitte wähle eine Antwort</string>
+    <string name="play_note_prompt">Spiele den Ton: %1$s</string>
+    <string name="pianino">Piano</string>
+    <string name="zagraj_ponownie">Erneut spielen</string>
+    <string name="gra_uko_czona_n_n_tw_j_wynik_to">Spiel beendet\n\nDein Ergebnis ist:</string>
+    <string name="wr_do_menu">Zurück zum Menü</string>
 
 
 

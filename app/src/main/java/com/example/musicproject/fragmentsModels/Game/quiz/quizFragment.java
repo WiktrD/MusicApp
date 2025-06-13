@@ -108,10 +108,10 @@ public class quizFragment extends Fragment {
         mViewModel.getIsAnswerCorrect().observe(getViewLifecycleOwner(), isCorrect -> {
             if (isCorrect == null) return;
             if (isCorrect) {
-                Toast.makeText(getContext(), "✅ Dobrze!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.correct_answer), Toast.LENGTH_SHORT).show();
                 mViewModel.loadNextQuestion();
             } else {
-                Toast.makeText(getContext(), "❌ Błąd, spróbuj ponownie", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.incorrect_answer), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -125,8 +125,8 @@ public class quizFragment extends Fragment {
         nextButton.setOnClickListener(v -> {
             if (selectedAnswerIndex != -1) {
                 mViewModel.submitAnswer(selectedAnswerIndex);
-            } else {
-                Toast.makeText(getContext(), "Wybierz odpowiedź", Toast.LENGTH_SHORT).show();
+            }  else {
+                Toast.makeText(getContext(), getString(R.string.select_answer), Toast.LENGTH_SHORT).show();
             }
         });
 

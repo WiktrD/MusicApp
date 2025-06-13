@@ -106,7 +106,7 @@ public class staffFragment extends Fragment {
         int total = correctCount + incorrectCount;
         int score = (int) (100.0 * correctCount / (total > 0 ? total : 1));
 
-        Toast.makeText(requireContext(), "Koniec gry! Wynik: " + score + "%", Toast.LENGTH_LONG).show();
+        Toast.makeText(requireContext(), getString(R.string.end_message, score), Toast.LENGTH_LONG).show();
 
         // ZAPIS DO BAZY DANYCH – Thread, bo insertWynik to suspend
         new Thread(() -> {

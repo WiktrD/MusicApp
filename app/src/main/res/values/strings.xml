@@ -150,6 +150,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="submit">dalej</string>
+    <string name="end_message">Koniec gry! Wynik: %1$d%%</string>
+    <string name="correct_answer">✅ Dobrze!</string>
+    <string name="incorrect_answer">❌ Błąd, spróbuj ponownie</string>
+    <string name="select_answer">Wybierz odpowiedź</string>
+    <string name="play_note_prompt">Zagraj nutę: %1$s</string>
+    <string name="pianino">Pianino</string>
+    <string name="zagraj_ponownie">Zagraj ponownie</string>
+    <string name="gra_uko_czona_n_n_tw_j_wynik_to">Gra ukończona\n\n Twój wynik to:</string>
+    <string name="wr_do_menu">Wróć do menu</string>
 
 
 </resources>

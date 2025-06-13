@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +14,6 @@ import com.example.musicproject.database.AppDatabase
 import com.example.musicproject.database.Wynik
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment
 import kotlinx.coroutines.launch
-
 
 
 class PianoFragment : Fragment() {
@@ -96,7 +94,8 @@ class PianoFragment : Fragment() {
         pianoView.viewModel = viewModel
 
         viewModel.targetNoteLive.observe(viewLifecycleOwner) { midi ->
-            noteText.text = "Zagraj nutę: ${midiToNoteName(midi)}"
+            val noteName = midiToNoteName(midi)
+            noteText.text = getString(R.string.play_note_prompt, noteName)
         }
 
 

@@ -148,5 +148,17 @@
     <string name="quiz_q14_correct">2</string>
     <string name="quiz_q15_correct">1</string>
 
+    <string name="submit">submit</string>
+    <string name="end_message">Game over! Score: %1$d%%</string>
+    <string name="correct_answer">✅ Correct!</string>
+    <string name="incorrect_answer">❌ Wrong, try again</string>
+    <string name="select_answer">Please select an answer</string>
+    <string name="play_note_prompt">Play the note: %1$s</string>
+    <string name="pianino">Piano</string>
+    <string name="zagraj_ponownie">Play again</string>
+    <string name="gra_uko_czona_n_n_tw_j_wynik_to">Game completed\n\nYour score is:</string>
+    <string name="wr_do_menu">Return to menu</string>
+
+
 
 </resources>

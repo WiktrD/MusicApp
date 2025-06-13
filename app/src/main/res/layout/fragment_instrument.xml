@@ -33,16 +33,16 @@
         <Button
             android:id="@+id/instrument_piano_button"
             android:layout_width="180dp"
-            android:layout_height="57dp"
-            android:layout_marginTop="408dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/button_style"
             android:fontFamily="@font/urban_font"
-            android:text="Pianino"
+            android:text="@string/pianino"
             android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/language_choice"
             app:layout_constraintWidth_percent="0.7" />
 
         <Button
@@ -58,19 +58,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/instrument_piano_button"
             app:layout_constraintVertical_bias="0.57"
-            app:layout_constraintWidth_percent="0.7" />
-
-        <Button
-            android:id="@+id/language_ger"
-            android:layout_width="87dp"
-            android:layout_height="54dp"
-            android:background="@drawable/button_style"
-            android:fontFamily="@font/urban_font"
-            android:text="ger"
-            android:textSize="26sp"
-            app:layout_constraintEnd_toStartOf="@+id/instrument_organs_button"
-            app:layout_constraintHorizontal_bias="0.375"
-            app:layout_constraintStart_toEndOf="@+id/instrument_piano_button"
             app:layout_constraintWidth_percent="0.7" />
 
         <TextView

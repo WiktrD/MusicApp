@@ -39,8 +39,23 @@ public class instrumentFragment extends Fragment {
         guitarButton.setOnClickListener(v -> viewModel.setInstrument(13)); // Xylophone
         fluteButton.setOnClickListener(v -> viewModel.setInstrument(19));  // Church Organ
 
+        viewModel.getSelectedInstrument().observe(getViewLifecycleOwner(), selected -> {
+            updateButtonStyles(pianoButton, selected == 0);
+            updateButtonStyles(guitarButton, selected == 13);
+            updateButtonStyles(fluteButton, selected == 19);
+        });
+
+
         return view;
     }
-
+    private void updateButtonStyles(Button button, boolean isSelected) {
+        if (isSelected) {
+            button.setAlpha(1.0f);
+            button.setBackgroundColor(getResources().getColor(R.color.teal_200, null)); // lub inny kolor
+        } else {
+            button.setAlpha(0.5f);
+            button.setBackgroundColor(getResources().getColor(R.color.gray, null));
+        }
+    }
 
 }
