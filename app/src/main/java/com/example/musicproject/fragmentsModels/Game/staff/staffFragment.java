@@ -103,8 +103,7 @@ public class staffFragment extends Fragment {
     }
 
     private void showFinalScore() {
-        int total = correctCount + incorrectCount;
-        int score = (int) (100.0 * correctCount / (total > 0 ? total : 1));
+        int score = correctCount - incorrectCount;
 
         Toast.makeText(requireContext(), getString(R.string.end_message, score), Toast.LENGTH_LONG).show();
 
