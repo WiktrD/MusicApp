@@ -8,4 +8,5 @@
         android:name="com.example.musicproject.fragmentsModels.MainMenu.MainMenuFragment"
         android:label="fragment_main_menu"
         tools:layout="@layout/fragment_main_menu" />
+
 </navigation>

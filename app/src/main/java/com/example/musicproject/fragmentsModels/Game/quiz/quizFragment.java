@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicproject.R;
+import com.example.musicproject.database.AppDatabase;
+import com.example.musicproject.database.Wynik;
+import com.example.musicproject.fragmentsModels.Game.GameResultFragment;
 
 public class quizFragment extends Fragment {
 
@@ -36,7 +39,7 @@ public class quizFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
-        // TODO: Use the ViewModel
+        mViewModel.loadQuestionsFromResources(requireContext());
     }
 
     @Nullable
@@ -58,9 +61,37 @@ public class quizFragment extends Fragment {
 
         mViewModel.getCurrentQuestion().observe(getViewLifecycleOwner(), question -> {
             if (question == null) {
-                questionText.setText("Quiz zakończony!");
-                answerGroup.setVisibility(View.GONE);
-                nextButton.setEnabled(false);
+                int correct = mViewModel.getCorrectCount();
+                int incorrect = mViewModel.getIncorrectCount();
+                int score = correct - incorrect;  // Wynik = poprawne - błędne
+
+                // Zapisz do bazy quiz
+                Wynik wynik = new Wynik(
+                        0,
+                        "quiz",
+                        score,
+                        correct,
+                        incorrect,
+                        System.currentTimeMillis()
+                );
+                AppDatabase db = AppDatabase.Companion.getInstance(requireContext());
+                new Thread(() -> db.wynikDao().insertWynikSync(wynik)).start();
+
+                // Przejdź do ekranu wyniku, przekaż score, poprawne, błędne
+                Bundle bundle = new Bundle();
+                bundle.putInt("score", score);
+                bundle.putInt("correctCount", correct);
+                bundle.putInt("incorrectCount", incorrect);
+
+                GameResultFragment resultFragment = new GameResultFragment();
+                resultFragment.setArguments(bundle);
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, resultFragment)
+                        .addToBackStack(null)
+                        .commit();
+
                 return;
             }
 
@@ -101,6 +132,4 @@ public class quizFragment extends Fragment {
 
         return view;
     }
-    }
-
-
+}

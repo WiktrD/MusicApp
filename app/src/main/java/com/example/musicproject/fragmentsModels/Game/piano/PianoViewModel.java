@@ -1,5 +1,7 @@
 package com.example.musicproject.fragmentsModels.Game.piano;
 
+import android.os.CountDownTimer;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,6 +11,12 @@ import com.example.musicproject.managers.SoundManager;
 import java.util.Random;
 
 public class PianoViewModel extends ViewModel {
+
+    // dodano dla timera
+    private final MutableLiveData<Long> timeLeft = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> gameEnded = new MutableLiveData<>(false);
+    private CountDownTimer countDownTimer;
+
     private final SoundManager soundManager;
     private final MutableLiveData<String> playedNote;
     private int targetNote = -1;
@@ -41,6 +49,8 @@ public class PianoViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
+        // dodano dla timera
+        if (countDownTimer != null) countDownTimer.cancel();
     }
     public SoundManager getSoundManager() {
         return soundManager;
@@ -60,6 +70,26 @@ public class PianoViewModel extends ViewModel {
         }
         generateRandomNote(); // losuj nową
     }
+
+    // dodano dla timera
+    public void startGameTimer(long durationMillis) {
+        if (countDownTimer != null) countDownTimer.cancel();
+        gameEnded.setValue(false);
+        countDownTimer = new CountDownTimer(durationMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeft.setValue(millisUntilFinished / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                timeLeft.setValue(0L);
+                gameEnded.setValue(true);
+            }
+        };
+        countDownTimer.start();
+    }
+
     public int getTargetNote() {
         return targetNote;
     }
@@ -79,6 +109,15 @@ public class PianoViewModel extends ViewModel {
     }
     public LiveData<Integer> getIncorrectCountLive() {
         return incorrectCountLive;
+    }
+
+
+    // dodano dla timera
+    public LiveData<Long> getTimeLeft() {
+        return timeLeft;
+    }
+    public LiveData<Boolean> isGameEnded() {
+        return gameEnded;
     }
 
 
