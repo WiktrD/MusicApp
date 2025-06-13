@@ -41,6 +41,7 @@ public class staffFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(StaffViewModel.class);
+        View playButton = view.findViewById(R.id.play_button);
 
         correctNoteText = view.findViewById(R.id.correct_note);
         wrongNoteText = view.findViewById(R.id.wrong_note);
@@ -52,8 +53,14 @@ public class staffFragment extends Fragment {
         StaveView staveView = view.findViewById(R.id.stave_view);
 
         // Obserwuj wyświetlaną nutę do zgadywania
-        viewModel.getCurrentNote().observe(getViewLifecycleOwner(), note ->
-                targetNoteText.setText(note != null ? note : "-"));
+        viewModel.getCurrentNote().observe(getViewLifecycleOwner(), note -> {
+            targetNoteText.setText(note != null ? note : "-");
+
+            // Auto odtwarzanie nowej nuty:
+            playButton.setEnabled(false);
+            viewModel.playCurrentNote();
+            playButton.postDelayed(() -> playButton.setEnabled(true), 1000);
+        });
 
         viewModel.getIsAnswerCorrect().observe(getViewLifecycleOwner(), correct -> {
             if (correct) {
@@ -65,10 +72,15 @@ public class staffFragment extends Fragment {
             wrongNoteText.setText(String.valueOf(incorrectCount));
         });
 
-        // Nowa nuta do zgadywania
+
+
         view.findViewById(R.id.play_button).setOnClickListener(v -> {
-            viewModel.loadNewNote();
+            playButton.setEnabled(false);
+            viewModel.playCurrentNote();
+            playButton.postDelayed(() -> playButton.setEnabled(true), 1000);
+
         });
+
 
         // Interakcja ze StaveView
         staveView.setOnTouchListener((v, event) -> {
