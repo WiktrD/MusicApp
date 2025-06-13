@@ -13,11 +13,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.atmusic.StaveView;
 import com.example.musicproject.R;
 import com.example.musicproject.database.AppDatabase;
 import com.example.musicproject.database.Wynik;
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment;
+import com.example.musicproject.managers.AnimationManager;
 
 public class staffFragment extends Fragment {
 
@@ -40,8 +42,16 @@ public class staffFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        LottieAnimationView successAnim = view.findViewById(R.id.lottie_success);
+        LottieAnimationView lossAnim = view.findViewById(R.id.lottie_loss);
+
         viewModel = new ViewModelProvider(this).get(StaffViewModel.class);
         View playButton = view.findViewById(R.id.play_button);
+
+
+        LottieAnimationView introAnim = view.findViewById(R.id.lottie_intro);
+        AnimationManager.showLottieAnimation(introAnim);
 
         correctNoteText = view.findViewById(R.id.correct_note);
         wrongNoteText = view.findViewById(R.id.wrong_note);
@@ -65,8 +75,10 @@ public class staffFragment extends Fragment {
         viewModel.getIsAnswerCorrect().observe(getViewLifecycleOwner(), correct -> {
             if (correct) {
                 correctCount++;
+                AnimationManager.showLottieAnimation(successAnim);
             } else {
                 incorrectCount++;
+                AnimationManager.showLottieAnimation(lossAnim);
             }
             correctNoteText.setText(String.valueOf(correctCount));
             wrongNoteText.setText(String.valueOf(incorrectCount));

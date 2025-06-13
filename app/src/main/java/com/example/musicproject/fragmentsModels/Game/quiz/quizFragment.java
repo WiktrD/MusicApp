@@ -17,10 +17,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.musicproject.R;
 import com.example.musicproject.database.AppDatabase;
 import com.example.musicproject.database.Wynik;
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment;
+import com.example.musicproject.managers.AnimationManager;
 
 public class quizFragment extends Fragment {
 
@@ -48,6 +50,9 @@ public class quizFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_quiz, container, false);
+
+        LottieAnimationView introAnim = view.findViewById(R.id.lottie_intro);
+        AnimationManager.showLottieAnimation(introAnim);
 
         questionText = view.findViewById(R.id.question_text);
         answerGroup = view.findViewById(R.id.answer_group);

@@ -8,11 +8,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.lottie.LottieAnimationView
 import com.example.atmusic.PianoView
 import com.example.musicproject.R
 import com.example.musicproject.database.AppDatabase
 import com.example.musicproject.database.Wynik
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment
+import com.example.musicproject.managers.AnimationManager
 import kotlinx.coroutines.launch
 
 
@@ -39,6 +41,9 @@ class PianoFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val introAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_intro)
+        AnimationManager.showLottieAnimation(introAnim)
         // dodano dla timera – uruchomienie gry
         viewModel.startGameTimer(60_000) // 60 sekund
 
@@ -108,9 +113,25 @@ class PianoFragment : Fragment() {
         }
 
         pianoView.setOnKeyPressedListener { midiNote ->
+            val beforeCorrect = viewModel.correctCount
+            val beforeIncorrect = viewModel.incorrectCount
+
             viewModel.checkNote(midiNote)
             viewModel.playNote(midiNote)
+
+            val afterCorrect = viewModel.correctCount
+            val afterIncorrect = viewModel.incorrectCount
+
+            val successAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_success)
+            val lossAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_loss)
+
+            if (afterCorrect > beforeCorrect) {
+                AnimationManager.showLottieAnimation(successAnim)
+            } else if (afterIncorrect > beforeIncorrect) {
+                AnimationManager.showLottieAnimation(lossAnim)
+            }
         }
+
     }
 
     private fun updateScoreText(scoreText: TextView) {

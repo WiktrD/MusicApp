@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.musicproject.R
 import com.example.musicproject.fragmentsModels.MainMenu.MainMenuFragment
 import com.example.musicproject.fragmentsModels.Game.piano.PianoFragment
+import com.example.musicproject.managers.AnimationManager
 
 class GameResultFragment : Fragment() {
 
@@ -22,6 +23,9 @@ class GameResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+       val introAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_fanfare)
+        AnimationManager.showLottieAnimation(introAnim)
 
         // Pobierz wynik z Bundla
         val score = arguments?.getInt("score", 0) ?: 0
