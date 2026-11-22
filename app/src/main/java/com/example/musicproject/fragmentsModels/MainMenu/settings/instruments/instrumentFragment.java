@@ -1,27 +1,25 @@
 package com.example.musicproject.fragmentsModels.MainMenu.settings.instruments;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.musicproject.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-public class instrumentFragment extends Fragment {
+import com.example.musicproject.R;
+import com.example.musicproject.managers.SoundManager;
+
+public class InstrumentFragment extends Fragment {
+
+    private static final float ALPHA_SELECTED = 1.0f;
+    private static final float ALPHA_NOT_SELECTED = 0.5f;
 
     private InstrumentViewModel viewModel;
-
-    public static instrumentFragment newInstance() {
-        return new instrumentFragment();
-    }
 
     @Nullable
     @Override
@@ -32,28 +30,23 @@ public class instrumentFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(InstrumentViewModel.class);
 
         Button pianoButton = view.findViewById(R.id.instrument_piano_button);
-        Button guitarButton = view.findViewById(R.id.instrument_xylofon_button);
-        Button fluteButton = view.findViewById(R.id.instrument_organs_button);
+        Button xylophoneButton = view.findViewById(R.id.instrument_xylofon_button);
+        Button organButton = view.findViewById(R.id.instrument_organs_button);
 
-        pianoButton.setOnClickListener(v -> viewModel.setInstrument(0));   // Grand Piano
-        guitarButton.setOnClickListener(v -> viewModel.setInstrument(13)); // Xylophone
-        fluteButton.setOnClickListener(v -> viewModel.setInstrument(19));  // Church Organ
+        pianoButton.setOnClickListener(v -> viewModel.setInstrument(SoundManager.PROGRAM_GRAND_PIANO));
+        xylophoneButton.setOnClickListener(v -> viewModel.setInstrument(SoundManager.PROGRAM_XYLOPHONE));
+        organButton.setOnClickListener(v -> viewModel.setInstrument(SoundManager.PROGRAM_CHURCH_ORGAN));
 
         viewModel.getSelectedInstrument().observe(getViewLifecycleOwner(), selected -> {
-            updateButtonStyles(pianoButton, selected == 0);
-            updateButtonStyles(guitarButton, selected == 13);
-            updateButtonStyles(fluteButton, selected == 19);
+            updateButtonStyles(pianoButton, selected == SoundManager.PROGRAM_GRAND_PIANO);
+            updateButtonStyles(xylophoneButton, selected == SoundManager.PROGRAM_XYLOPHONE);
+            updateButtonStyles(organButton, selected == SoundManager.PROGRAM_CHURCH_ORGAN);
         });
-
 
         return view;
     }
-    private void updateButtonStyles(Button button, boolean isSelected) {
-        if (isSelected) {
-            button.setAlpha(1.0f);
-        } else {
-            button.setAlpha(0.5f);
-        }
-    }
 
+    private void updateButtonStyles(Button button, boolean isSelected) {
+        button.setAlpha(isSelected ? ALPHA_SELECTED : ALPHA_NOT_SELECTED);
+    }
 }

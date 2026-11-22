@@ -160,6 +160,7 @@
     <string name="zagraj_ponownie">Zagraj ponownie</string>
     <string name="gra_uko_czona_n_n_tw_j_wynik_to">Gra ukończona\n\n Twój wynik to:</string>
     <string name="wr_do_menu">Wróć do menu</string>
+    <string name="pkt">" pkt"</string>
 
 
 </resources>

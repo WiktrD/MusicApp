@@ -7,16 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.example.atmusic.PianoView
 import com.example.musicproject.R
-import com.example.musicproject.database.AppDatabase
-import com.example.musicproject.database.Wynik
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment
 import com.example.musicproject.managers.AnimationManager
-import kotlinx.coroutines.launch
-
 
 class PianoFragment : Fragment() {
 
@@ -30,79 +25,42 @@ class PianoFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_piano, container, false)
         val pianoView = view.findViewById<PianoView>(R.id.piano_view)
         viewModel = ViewModelProvider(this)[PianoViewModel::class.java]
-        pianoView.viewModel = viewModel
-        pianoView.setOnKeyPressedListener { note ->
-            viewModel.playNote(note)
-        }
         pianoView.setOnKeyReleasedListener { midiNote ->
             viewModel.stopNote(midiNote)
         }
         return view
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val introAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_intro)
+        val introAnim = view.findViewById<LottieAnimationView>(R.id.lottie_intro)
         AnimationManager.showLottieAnimation(introAnim)
-        // dodano dla timera – uruchomienie gry
-        viewModel.startGameTimer(60_000) // 60 sekund
 
+        viewModel.startGameTimer(GAME_DURATION_MS)
 
-        // dodano dla timera – obserwowanie czasu
-        val timeText = view.findViewById<TextView>(R.id.time_text) // musisz mieć TextView np. u góry
+        val timeText = view.findViewById<TextView>(R.id.time_text)
         viewModel.timeLeft.observe(viewLifecycleOwner) { time ->
             timeText.text = "$time s"
         }
 
-
-        // dodano dla timera – zakończenie gry
         viewModel.isGameEnded().observe(viewLifecycleOwner) { ended ->
             if (ended) {
-                val correct = viewModel.correctCount
-                val incorrect = viewModel.incorrectCount
-                val score = correct - incorrect
-
-                // dodano zapis do bazy
-                val wynik = Wynik(
-                    typGry = "pianino",
-                    punkty = score,
-                    poprawne = correct,
-                    bledne = incorrect
-                )
-
-                val db = AppDatabase.getInstance(requireContext())
-                lifecycleScope.launch {
-                    db.wynikDao().insertWynik(wynik)
-
-                    // po zapisie przejdź do ekranu wyników
-                    val bundle = Bundle().apply {
-                        putInt("score", score)
-                    }
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, GameResultFragment().apply { arguments = bundle })
-                        .addToBackStack(null)
-                        .commit()
-                }
+                saveScoreAndShowResult()
             }
         }
 
-
-
-
-        // Wszystkie operacje na widoku tutaj!
         val correctText = view.findViewById<TextView>(R.id.correct_note)
         val incorrectText = view.findViewById<TextView>(R.id.wrong_note)
         val noteText = view.findViewById<TextView>(R.id.random_note)
         val pianoView = view.findViewById<PianoView>(R.id.piano_view)
-
-        viewModel = ViewModelProvider(this)[PianoViewModel::class.java]
-        pianoView.viewModel = viewModel
+        val successAnim = view.findViewById<LottieAnimationView>(R.id.lottie_success)
+        val lossAnim = view.findViewById<LottieAnimationView>(R.id.lottie_loss)
 
         viewModel.targetNoteLive.observe(viewLifecycleOwner) { midi ->
             val noteName = midiToNoteName(midi)
             noteText.text = getString(R.string.play_note_prompt, noteName)
         }
-
 
         viewModel.correctCountLive.observe(viewLifecycleOwner) { correct ->
             correctText.text = "$correct"
@@ -122,21 +80,21 @@ class PianoFragment : Fragment() {
             val afterCorrect = viewModel.correctCount
             val afterIncorrect = viewModel.incorrectCount
 
-            val successAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_success)
-            val lossAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_loss)
-
             if (afterCorrect > beforeCorrect) {
                 AnimationManager.showLottieAnimation(successAnim)
             } else if (afterIncorrect > beforeIncorrect) {
                 AnimationManager.showLottieAnimation(lossAnim)
             }
         }
-
     }
 
-    private fun updateScoreText(scoreText: TextView) {
-        val correct = viewModel.correctCountLive.value ?: 0
-        val incorrect = viewModel.incorrectCountLive.value ?: 0
+    private fun saveScoreAndShowResult() {
+        val score = viewModel.finishGame()
+        val bundle = Bundle().apply { putInt("score", score) }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, GameResultFragment().apply { arguments = bundle })
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun midiToNoteName(midi: Int): String {
@@ -144,5 +102,9 @@ class PianoFragment : Fragment() {
         val note = noteNames[midi % 12]
         val octave = midi / 12 - 1
         return "$note$octave"
+    }
+
+    private companion object {
+        const val GAME_DURATION_MS = 60_000L
     }
 }

@@ -12,12 +12,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.musicproject.R;
 import com.example.musicproject.database.AppDatabase;
-import com.example.musicproject.database.Wynik;
+import com.example.musicproject.database.GameScore;
+import com.example.musicproject.database.GameTypes;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class scoreFragment extends Fragment {
+public class ScoreFragment extends Fragment {
 
     private TextView pianoText, staveText, quizText, accuracyText;
 
@@ -29,9 +30,8 @@ public class scoreFragment extends Fragment {
         pianoText = view.findViewById(R.id.best_piano);
         staveText = view.findViewById(R.id.best_stave);
         quizText = view.findViewById(R.id.best_quiz);
-        accuracyText = view.findViewById(R.id.quiz_result);
+        accuracyText = view.findViewById(R.id.best_accuracy);
 
-        // Obsługa przycisku reset
         View resetButton = view.findViewById(R.id.button_reset);
         if (resetButton != null) {
             resetButton.setOnClickListener(v -> resetScores());
@@ -47,20 +47,20 @@ public class scoreFragment extends Fragment {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                List<Wynik> pianoList = db.wynikDao().getWynikiDlaGrySync("pianino");
-                List<Wynik> staveList = db.wynikDao().getWynikiDlaGrySync("pieciolinia");
-                List<Wynik> quizList = db.wynikDao().getWynikiDlaGrySync("quiz");
+                List<GameScore> pianoScores = db.scoreDao().getScoresForGameSync(GameTypes.PIANO);
+                List<GameScore> staffScores = db.scoreDao().getScoresForGameSync(GameTypes.STAFF);
+                List<GameScore> quizScores = db.scoreDao().getScoresForGameSync(GameTypes.QUIZ);
 
-                int pianoBest = calculateBest(pianoList);
-                int staveBest = calculateBest(staveList);
-                int quizBest = calculateBest(quizList);
+                int pianoBest = calculateBest(pianoScores);
+                int staffBest = calculateBest(staffScores);
+                int quizBest = calculateBest(quizScores);
 
-                int accuracyBest = calculateBestAccuracy(pianoList, staveList, quizList);
+                int accuracyBest = calculateBestAccuracy(pianoScores, staffScores, quizScores);
 
                 requireActivity().runOnUiThread(() -> {
-                    pianoText.setText(pianoBest + " pkt");
-                    staveText.setText(staveBest + " pkt");
-                    quizText.setText(quizBest + " pkt");
+                    pianoText.setText(pianoBest + getString(R.string.pkt));
+                    staveText.setText(staffBest + getString(R.string.pkt));
+                    quizText.setText(quizBest + getString(R.string.pkt));
                     accuracyText.setText(accuracyBest + " %");
                 });
             } catch (Exception e) {
@@ -69,23 +69,24 @@ public class scoreFragment extends Fragment {
         });
     }
 
-    // Najlepszy wynik "punkty" z listy (różnica poprawne - błędne)
-    private int calculateBest(List<Wynik> wyniki) {
+    // Best "points" value in the list (points = correct - incorrect)
+    private int calculateBest(List<GameScore> scores) {
         int best = Integer.MIN_VALUE;
-        for (Wynik w : wyniki) {
-            if (w.getPunkty() > best) best = w.getPunkty();
+        for (GameScore score : scores) {
+            if (score.getPoints() > best) best = score.getPoints();
         }
         return best == Integer.MIN_VALUE ? 0 : best;
     }
 
-    // Najlepszy accuracy (procent poprawnych) ze wszystkich konkurencji
-    private int calculateBestAccuracy(List<Wynik>... lists) {
+    // Best accuracy (percentage of correct answers) across all games
+    @SafeVarargs
+    private final int calculateBestAccuracy(List<GameScore>... scoreLists) {
         int bestAccuracy = 0;
-        for (List<Wynik> wyniki : lists) {
-            for (Wynik w : wyniki) {
-                int total = w.getPoprawne() + w.getBledne();
+        for (List<GameScore> scores : scoreLists) {
+            for (GameScore score : scores) {
+                int total = score.getCorrectCount() + score.getIncorrectCount();
                 if (total > 0) {
-                    int accuracy = (int) (100.0 * w.getPoprawne() / total);
+                    int accuracy = (int) (100.0 * score.getCorrectCount() / total);
                     if (accuracy > bestAccuracy) bestAccuracy = accuracy;
                 }
             }
@@ -93,12 +94,12 @@ public class scoreFragment extends Fragment {
         return bestAccuracy;
     }
 
-    // RESET wszystkiego w tabeli Wynik
+    // Delete all scores
     private void resetScores() {
         AppDatabase db = AppDatabase.Companion.getInstance(requireContext());
         Executors.newSingleThreadExecutor().execute(() -> {
-            db.wynikDao().deleteAll();
-            // Po resecie odśwież wyniki na ekranie
+            db.scoreDao().deleteAll();
+            // Refresh the displayed scores after the reset
             loadScores();
         });
     }

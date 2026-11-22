@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "wynik")
 data class Wynik(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val typGry: String, // np. "pianino", "pieciolinia", "quiz"
+    val typGry: String,      // np. "pianino", "pieciolinia", "quiz"
     val punkty: Int,
     val poprawne: Int,
     val bledne: Int,

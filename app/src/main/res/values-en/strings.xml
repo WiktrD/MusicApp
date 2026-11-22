@@ -158,7 +158,7 @@
     <string name="zagraj_ponownie">Play again</string>
     <string name="gra_uko_czona_n_n_tw_j_wynik_to">Game completed\n\nYour score is:</string>
     <string name="wr_do_menu">Return to menu</string>
-
+    <string name="pkt">" pkt"</string>
 
 
 </resources>

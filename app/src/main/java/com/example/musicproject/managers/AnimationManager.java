@@ -1,7 +1,7 @@
 package com.example.musicproject.managers;
 
-import android.view.View;
 import android.animation.Animator;
+import android.view.View;
 
 import com.airbnb.lottie.LottieAnimationView;
 

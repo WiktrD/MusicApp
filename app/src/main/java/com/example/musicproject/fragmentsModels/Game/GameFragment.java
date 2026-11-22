@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,8 +13,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.musicproject.R;
 import com.example.musicproject.fragmentsModels.Game.piano.PianoFragment;
-import com.example.musicproject.fragmentsModels.Game.quiz.quizFragment;
-import com.example.musicproject.fragmentsModels.Game.staff.staffFragment;
+import com.example.musicproject.fragmentsModels.Game.quiz.QuizFragment;
+import com.example.musicproject.fragmentsModels.Game.staff.StaffFragment;
 
 public class GameFragment extends Fragment {
     @Nullable
@@ -21,9 +22,9 @@ public class GameFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_game, container, false);
 
-        Button pianoButton = view.findViewById(R.id.language_right);
-        Button staffButton = view.findViewById(R.id.button_instruments_settings);
-        Button quizButton = view.findViewById(R.id.button_language_settings);
+        Button pianoButton = view.findViewById(R.id.button_game_piano);
+        Button staffButton = view.findViewById(R.id.button_game_staff);
+        Button quizButton = view.findViewById(R.id.button_game_quiz);
 
         pianoButton.setOnClickListener(v -> openGame("piano"));
         staffButton.setOnClickListener(v -> openGame("staff"));
@@ -39,10 +40,10 @@ public class GameFragment extends Fragment {
                 fragment = new PianoFragment();
                 break;
             case "staff":
-                fragment = new staffFragment();
+                fragment = new StaffFragment();
                 break;
             case "quiz":
-                fragment = new quizFragment();
+                fragment = new QuizFragment();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown game type: " + gameType);

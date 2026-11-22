@@ -5,11 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Wynik::class], version = 1)
+@Database(entities = [GameScore::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun wynikDao(): WynikDao
+    abstract fun scoreDao(): ScoreDao
 
     companion object {
+        // Legacy (Polish) file name, kept so existing installs do not lose their scores.
+        private const val DATABASE_NAME = "wyniki.db"
+
         @Volatile private var INSTANCE: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
@@ -17,7 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
                 Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "wyniki.db"
+                    DATABASE_NAME
                 ).build().also { INSTANCE = it }
             }
         }

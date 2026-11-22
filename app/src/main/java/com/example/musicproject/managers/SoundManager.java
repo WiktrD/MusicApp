@@ -1,14 +1,30 @@
 package com.example.musicproject.managers;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.billthefarmer.mididriver.MidiDriver;
+
 public class SoundManager implements MidiDriver.OnMidiStartListener {
+
+    // General MIDI program numbers used by the instrument settings
+    public static final int PROGRAM_GRAND_PIANO = 0;
+    public static final int PROGRAM_XYLOPHONE = 13;
+    public static final int PROGRAM_CHURCH_ORGAN = 19;
+
+    private static final String TAG = "MIDI";
+
+    // MIDI status bytes (channel 0)
+    private static final int STATUS_NOTE_ON = 0x90;
+    private static final int STATUS_NOTE_OFF = 0x80;
+    private static final int STATUS_PROGRAM_CHANGE = 0xC0;
+
+    private static final int MAX_MIDI_VALUE = 127;
+    private static final int MAX_VOLUME_PERCENT = 100;
+
     private static SoundManager instance;
 
-    private MidiDriver midi;
-    int volume = 100;
+    private final MidiDriver midi;
+    private int volumePercent = MAX_VOLUME_PERCENT;
 
     public SoundManager() {
         midi = MidiDriver.getInstance(this);
@@ -16,36 +32,67 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
         midi.start();
     }
 
-    public static synchronized  SoundManager getInstance() {
+    public static synchronized SoundManager getInstance() {
         if (instance == null) {
             instance = new SoundManager();
         }
         return instance;
     }
+
     public void playNote(int note) {
         byte[] msg = new byte[3];
-        msg[0] = (byte) 0x90; // NOTE_ON na kanale 0
-        msg[1] = (byte) note; // numer nuty
-        msg[2] = (byte) (127*volume/100);  // głośność maksymalna
+        msg[0] = (byte) STATUS_NOTE_ON;
+        msg[1] = (byte) note;
+        msg[2] = (byte) (MAX_MIDI_VALUE * volumePercent / MAX_VOLUME_PERCENT); // velocity
         midi.write(msg);
-        Log.d("MIDI", "Note ON: " + note);
+        Log.d(TAG, "Note ON: " + note);
     }
 
     public void stopNote(int note) {
         byte[] msg = new byte[3];
-        msg[0] = (byte) 0x80; // NOTE_OFF, channel 0
+        msg[0] = (byte) STATUS_NOTE_OFF;
         msg[1] = (byte) note;
         msg[2] = (byte) 0;
         midi.write(msg);
-        Log.d("MIDI", "Note OFF " + note);
-    }
-    public void stop() {
-        if (midi != null) {
-            midi.stop();
-            Log.d("MIDI", "MIDI stopped.");
-        }
+        Log.d(TAG, "Note OFF " + note);
     }
 
+    public void changeInstrument(int programNumber) {
+        if (programNumber < 0 || programNumber > MAX_MIDI_VALUE) {
+            Log.w(TAG, "Invalid instrument number: " + programNumber);
+            return;
+        }
+
+        byte[] msg = new byte[2];
+        msg[0] = (byte) STATUS_PROGRAM_CHANGE;
+        msg[1] = (byte) programNumber;
+        midi.write(msg);
+        Log.d(TAG, "Instrument changed to: " + programNumber);
+    }
+
+    @Override
+    public void onMidiStart() {
+        byte[] msg = new byte[2];
+        msg[0] = (byte) STATUS_PROGRAM_CHANGE;
+        msg[1] = (byte) PROGRAM_GRAND_PIANO;
+        midi.write(msg);
+        Log.d(TAG, "Instrument set");
+    }
+
+    public void setVolume(int volumePercent) {
+        this.volumePercent = volumePercent;
+    }
+
+    public void playNoteByName(String noteName, int delayMillis) {
+        int midiNote = convertNoteToMidiValue(noteName);
+        if (midiNote != -1) {
+            playNote(midiNote);
+
+            new android.os.Handler().postDelayed(() -> stopNote(midiNote), delayMillis);
+        } else {
+            Log.w("SoundManager", "Unknown note: " + noteName);
+        }
+    }
 
     private int convertNoteToMidiValue(String note) {
         switch (note.toUpperCase()) {
@@ -62,38 +109,6 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
             case "A#": return 70;
             case "B": return 71;
             default: return -1;
-        }
-    }
-    public void changeInstrument(int programNumber) {
-        if (programNumber < 0 || programNumber > 127) {
-            Log.w("MIDI", "Invalid instrument number: " + programNumber);
-            return;
-        }
-
-        byte[] msg = new byte[2];
-        msg[0] = (byte) 0xC0; // PROGRAM_CHANGE
-        msg[1] = (byte) programNumber;
-        midi.write(msg);
-        Log.d("MIDI", "Instrument changed to: " + programNumber);
-    }
-    public void onMidiStart() {
-        byte[] msg = new byte[2];
-        msg[0] = (byte) 0xC0; // PROGRAM_CHANGE
-        msg[1] = (byte) 0;    // instrument 0 = Grand Piano
-        midi.write(msg);
-        Log.d("MIDI", "Instrument set");
-    }
-    public void setVolume(int val){
-        this.volume=val;
-    }
-    public void playNoteByName(String noteName,int delay) {
-        int midiNote = convertNoteToMidiValue(noteName);
-        if (midiNote != -1) {
-            playNote(midiNote);
-
-            new android.os.Handler().postDelayed(() -> stopNote(midiNote), delay);
-        } else {
-            Log.w("SoundManager", "Nieznana nuta: " + noteName);
         }
     }
 }

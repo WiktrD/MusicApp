@@ -1,50 +1,34 @@
 package com.example.musicproject.fragmentsModels.MainMenu.settings;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.musicproject.R;
-import com.example.musicproject.fragmentsModels.MainMenu.settings.instruments.instrumentFragment;
-import com.example.musicproject.fragmentsModels.MainMenu.settings.langauge.langaugeFragment;
-import com.example.musicproject.fragmentsModels.MainMenu.settings.sound.soundFragment;
+import com.example.musicproject.fragmentsModels.MainMenu.settings.instruments.InstrumentFragment;
+import com.example.musicproject.fragmentsModels.MainMenu.settings.language.LanguageFragment;
+import com.example.musicproject.fragmentsModels.MainMenu.settings.sound.SoundFragment;
 
-public class settingsFragment extends Fragment {
-
-    private SettingsViewModel mViewModel;
-
-    public static settingsFragment newInstance() {
-        return new settingsFragment();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
-        // TODO: Use the ViewModel
-    }
+public class SettingsFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
         Button soundButton = view.findViewById(R.id.button_sound_settings);
         Button instrumentButton = view.findViewById(R.id.button_instruments_settings);
         Button languageButton = view.findViewById(R.id.button_language_settings);
 
         soundButton.setOnClickListener(v -> openSubSetting("settingsSound"));
         instrumentButton.setOnClickListener(v -> openSubSetting("settingsInstruments"));
-        languageButton.setOnClickListener(v -> openSubSetting("settingsLangauge"));
+        languageButton.setOnClickListener(v -> openSubSetting("settingsLanguage"));
 
         return view;
     }
@@ -54,13 +38,13 @@ public class settingsFragment extends Fragment {
 
         switch (type) {
             case "settingsSound":
-                fragment = new soundFragment();
+                fragment = new SoundFragment();
                 break;
             case "settingsInstruments":
-                fragment = new instrumentFragment();
+                fragment = new InstrumentFragment();
                 break;
-            case "settingsLangauge":
-                fragment = new langaugeFragment();
+            case "settingsLanguage":
+                fragment = new LanguageFragment();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown setting type: " + type);

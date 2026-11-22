@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.example.musicproject.R
 import com.example.musicproject.fragmentsModels.MainMenu.MainMenuFragment
-import com.example.musicproject.fragmentsModels.Game.piano.PianoFragment
 import com.example.musicproject.managers.AnimationManager
 
 class GameResultFragment : Fragment() {
@@ -24,26 +24,24 @@ class GameResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       val introAnim = view.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottie_fanfare)
-        AnimationManager.showLottieAnimation(introAnim)
+        val fanfareAnim = view.findViewById<LottieAnimationView>(R.id.lottie_fanfare)
+        AnimationManager.showLottieAnimation(fanfareAnim)
 
-        // Pobierz wynik z Bundla
+        // Read the score passed in the arguments
         val score = arguments?.getInt("score", 0) ?: 0
 
-        // Wyświetl wynik
-        val resultText = view.findViewById<TextView>(R.id.quiz_result)
-        resultText.text = score.toString()
+        val scoreText = view.findViewById<TextView>(R.id.score_value)
+        scoreText.text = score.toString()
 
-        // Obsługa przycisku "Zagraj ponownie"
-        view.findViewById<Button>(R.id.quiz_playAgain).setOnClickListener {
-            // Wróć do PianoFragment
+        // "Play again" button: back to the game selection screen
+        view.findViewById<Button>(R.id.button_play_again).setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, GameFragment())
                 .addToBackStack(null)
                 .commit()
         }
 
-        // Obsługa przycisku "Wróć do menu"
+        // "Back to menu" button
         view.findViewById<Button>(R.id.button_backToMenu).setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MainMenuFragment())

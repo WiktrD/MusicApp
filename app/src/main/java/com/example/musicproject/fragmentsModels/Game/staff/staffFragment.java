@@ -16,21 +16,23 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.atmusic.StaveView;
 import com.example.musicproject.R;
-import com.example.musicproject.database.AppDatabase;
-import com.example.musicproject.database.Wynik;
+import com.example.musicproject.database.GameTypes;
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment;
 import com.example.musicproject.managers.AnimationManager;
+import com.example.musicproject.managers.ResultManager;
 
-public class staffFragment extends Fragment {
+public class StaffFragment extends Fragment {
+
+    private static final long GAME_DURATION_MS = 60_000;
+    private static final long TIMER_TICK_MS = 1000;
+    private static final long PLAY_BUTTON_COOLDOWN_MS = 1000;
 
     private StaffViewModel viewModel;
 
-    private int correctCount = 0;
-    private int incorrectCount = 0;
+    private ResultManager resultManager;
 
     private TextView correctNoteText, wrongNoteText, targetNoteText, timerText;
     private CountDownTimer timer;
-    private final long GAME_DURATION_MS = 60_000;
 
     private String selectedNote = null;
 
@@ -42,6 +44,9 @@ public class staffFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        resultManager = ResultManager.create(requireContext(), GameTypes.STAFF);
 
         LottieAnimationView successAnim = view.findViewById(R.id.lottie_success);
         LottieAnimationView lossAnim = view.findViewById(R.id.lottie_loss);
@@ -49,71 +54,59 @@ public class staffFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(StaffViewModel.class);
         View playButton = view.findViewById(R.id.play_button);
 
-
         LottieAnimationView introAnim = view.findViewById(R.id.lottie_intro);
         AnimationManager.showLottieAnimation(introAnim);
 
         correctNoteText = view.findViewById(R.id.correct_note);
         wrongNoteText = view.findViewById(R.id.wrong_note);
         targetNoteText = view.findViewById(R.id.random_note);
-
-        // Dodaj TextView do timera w XML, np. o id time_text
         timerText = view.findViewById(R.id.time_text);
 
         StaveView staveView = view.findViewById(R.id.stave_view);
 
-        // Obserwuj wyświetlaną nutę do zgadywania
+        // Observe the note the player has to guess
         viewModel.getCurrentNote().observe(getViewLifecycleOwner(), note -> {
             targetNoteText.setText(note != null ? note : "-");
 
-            // Auto odtwarzanie nowej nuty:
-            playButton.setEnabled(false);
-            viewModel.playCurrentNote();
-            playButton.postDelayed(() -> playButton.setEnabled(true), 1000);
+            // Automatically play the new note
+            playCurrentNote(playButton);
         });
 
         viewModel.getIsAnswerCorrect().observe(getViewLifecycleOwner(), correct -> {
-            if (correct) {
-                correctCount++;
-                AnimationManager.showLottieAnimation(successAnim);
-            } else {
-                incorrectCount++;
-                AnimationManager.showLottieAnimation(lossAnim);
-            }
-            correctNoteText.setText(String.valueOf(correctCount));
-            wrongNoteText.setText(String.valueOf(incorrectCount));
+            resultManager.recordAnswer(correct);
+            AnimationManager.showLottieAnimation(correct ? successAnim : lossAnim);
+            correctNoteText.setText(String.valueOf(resultManager.getCorrect()));
+            wrongNoteText.setText(String.valueOf(resultManager.getIncorrect()));
         });
 
+        playButton.setOnClickListener(v -> playCurrentNote(playButton));
 
-
-        view.findViewById(R.id.play_button).setOnClickListener(v -> {
-            playButton.setEnabled(false);
-            viewModel.playCurrentNote();
-            playButton.postDelayed(() -> playButton.setEnabled(true), 1000);
-
-        });
-
-
-        // Interakcja ze StaveView
+        // Remember the note the player placed on the stave
         staveView.setOnTouchListener((v, event) -> {
-            selectedNote = staveView.getTouchedNoteName();
+            selectedNote = staveView.getSelectedNoteName();
             return false;
         });
 
-        // Akceptuj odpowiedź
+        // Submit the answer
         view.findViewById(R.id.accept_button).setOnClickListener(v -> {
             if (selectedNote != null) {
                 viewModel.submitAnswer(selectedNote);
-                selectedNote = null; // resetuj zaznaczenie na następne pytanie
+                selectedNote = null; // reset the selection for the next question
             }
         });
 
-        // Wystartuj timer!
         startGameTimer();
     }
 
+    /** Plays the current note and keeps the play button disabled for a moment. */
+    private void playCurrentNote(View playButton) {
+        playButton.setEnabled(false);
+        viewModel.playCurrentNote();
+        playButton.postDelayed(() -> playButton.setEnabled(true), PLAY_BUTTON_COOLDOWN_MS);
+    }
+
     private void startGameTimer() {
-        timer = new CountDownTimer(GAME_DURATION_MS, 1000) {
+        timer = new CountDownTimer(GAME_DURATION_MS, TIMER_TICK_MS) {
             public void onTick(long millisUntilFinished) {
                 if (timerText != null) {
                     timerText.setText((millisUntilFinished / 1000) + " s");
@@ -127,25 +120,11 @@ public class staffFragment extends Fragment {
     }
 
     private void showFinalScore() {
-        int score = correctCount - incorrectCount;
+        int score = resultManager.finish(); // calculates the score and saves it (once)
 
         Toast.makeText(requireContext(), getString(R.string.end_message, score), Toast.LENGTH_LONG).show();
 
-        // ZAPIS DO BAZY DANYCH – Thread, bo insertWynik to suspend
-        new Thread(() -> {
-            AppDatabase db = AppDatabase.Companion.getInstance(requireContext());
-            Wynik wynik = new Wynik(
-                    0,
-                    "pieciolinia",
-                    score,
-                    correctCount,
-                    incorrectCount,
-                    System.currentTimeMillis()
-            );
-            db.wynikDao().insertWynikSync(wynik); // <- MUSISZ DODAĆ TEN insertWynikSync do WynikDao!
-        }).start();
-
-        // Przejście do GameResultFragment z wynikiem
+        // Go to the result screen with the final score
         Bundle bundle = new Bundle();
         bundle.putInt("score", score);
         GameResultFragment resultFragment = new GameResultFragment();

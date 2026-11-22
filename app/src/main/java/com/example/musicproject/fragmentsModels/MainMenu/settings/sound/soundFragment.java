@@ -1,32 +1,24 @@
 package com.example.musicproject.fragmentsModels.MainMenu.settings.sound;
 
-import androidx.lifecycle.ViewModelProvider;
-
+import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.musicproject.R;
 
-public class soundFragment extends Fragment {
+public class SoundFragment extends Fragment {
     private SeekBar seekBar;
     private TextView volumeText;
     private AudioManager audioManager;
-
-    private SoundViewModel mViewModel;
-
-    public static soundFragment newInstance() {
-        return new soundFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,10 +29,9 @@ public class soundFragment extends Fragment {
         volumeText = view.findViewById(R.id.volume_level);
         View muteButton = view.findViewById(R.id.mute);
 
-        // AudioManager z kontekstu
-        audioManager = (AudioManager) requireContext().getSystemService(getContext().AUDIO_SERVICE);
+        audioManager = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
 
-        // Maksymalna i aktualna głośność
+        // Maximum and current music stream volume
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
@@ -48,7 +39,7 @@ public class soundFragment extends Fragment {
         seekBar.setProgress(currentVolume);
         updateVolumeText(currentVolume, maxVolume);
 
-        // Zmiana głośności przez SeekBar
+        // Change the volume with the SeekBar
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -65,7 +56,7 @@ public class soundFragment extends Fragment {
             }
         });
 
-        // Obsługa mute
+        // Mute button
         muteButton.setOnClickListener(v -> {
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
             seekBar.setProgress(0);
@@ -76,7 +67,6 @@ public class soundFragment extends Fragment {
     }
 
     private void updateVolumeText(int current, int max) {
-        // Możesz wyświetlać procent lub "poziom X/Y"
         int percent = (int) (100.0 * current / max);
         volumeText.setText(getString(R.string.instrument_string_volume) + " " + percent + "%");
     }

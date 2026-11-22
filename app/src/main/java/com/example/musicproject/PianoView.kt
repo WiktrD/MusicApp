@@ -8,7 +8,6 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.example.musicproject.fragmentsModels.Game.piano.PianoViewModel
 
 class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
@@ -21,15 +20,16 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val pressedPaint = Paint().apply { color = Color.LTGRAY; style = Paint.Style.FILL }
     private val borderPaint = Paint().apply { color = Color.DKGRAY; style = Paint.Style.STROKE; strokeWidth = 4f }
 
-    var viewModel: PianoViewModel? = null
     private var onKeyPressedListener: ((Int) -> Unit)? = null
     fun setOnKeyPressedListener(listener: (Int) -> Unit) {
         this.onKeyPressedListener = listener
     }
+
     private var onKeyReleasedListener: ((Int) -> Unit)? = null
     fun setOnKeyReleasedListener(listener: (Int) -> Unit) {
         onKeyReleasedListener = listener
     }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -39,7 +39,7 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         whiteKeys.clear()
         blackKeys.clear()
 
-        // Białe klawisze: C, D, E, F, G, A, B, C
+        // White keys: C, D, E, F, G, A, B, C
         for (i in 0 until 8) {
             val rect = Rect((i * keyWidth).toInt(), 50, ((i + 1) * keyWidth).toInt(), (50 + keyHeight).toInt())
             whiteKeys.add(rect)
@@ -47,7 +47,7 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             canvas.drawRect(rect, borderPaint)
         }
 
-        // Czarnie klawisze: C#, D#, F#, G#, A#
+        // Black keys: C#, D#, F#, G#, A#
         val blackKeyHeight = keyHeight * 0.6f
         val blackKeyIndexes = listOf(0, 1, 3, 4, 5)
         val blackKeyOffset = keyWidth * 0.75f
@@ -60,7 +60,7 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                 (50 + blackKeyHeight).toInt()
             )
             blackKeys.add(rect)
-            canvas.drawRect(rect, if (pressedKeyIndex == 100 + i) pressedPaint else blackPaint)
+            canvas.drawRect(rect, if (pressedKeyIndex == BLACK_KEY_ID_OFFSET + i) pressedPaint else blackPaint)
         }
     }
 
@@ -70,17 +70,17 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // Najpierw sprawdź czarne
+                // Check black keys first (they are drawn on top of white ones)
                 blackKeys.forEachIndexed { index, rect ->
                     if (rect.contains(x, y)) {
-                        pressedKeyIndex = 100 + index
+                        pressedKeyIndex = BLACK_KEY_ID_OFFSET + index
                         invalidate()
                         onKeyPressedListener?.invoke(mapBlackKeyToMidi(index))
                         return true
                     }
                 }
 
-                // Potem białe
+                // Then white keys
                 whiteKeys.forEachIndexed { index, rect ->
                     if (rect.contains(x, y)) {
                         pressedKeyIndex = index
@@ -93,15 +93,15 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
             MotionEvent.ACTION_UP -> {
                 pressedKeyIndex?.let { index ->
-                    val midiNote = if (index >= 100) {
-                        mapBlackKeyToMidi(index - 100)
+                    val midiNote = if (index >= BLACK_KEY_ID_OFFSET) {
+                        mapBlackKeyToMidi(index - BLACK_KEY_ID_OFFSET)
                     } else {
                         mapWhiteKeyToMidi(index)
                     }
 
                     postDelayed({
                         onKeyReleasedListener?.invoke(midiNote)
-                    }, 200)
+                    }, KEY_RELEASE_DELAY_MS)
                 }
 
                 pressedKeyIndex = null
@@ -112,7 +112,7 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         return true
     }
 
-    // Mapowanie klawiszy na dźwięki MIDI
+    // Mapping of keys to MIDI notes
     private fun mapWhiteKeyToMidi(index: Int): Int {
         val whiteNotes = listOf(60, 62, 64, 65, 67, 69, 71, 72) // C4 -> C5
         return whiteNotes.getOrElse(index) { 60 }
@@ -121,5 +121,13 @@ class PianoView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private fun mapBlackKeyToMidi(index: Int): Int {
         val blackNotes = listOf(61, 63, 66, 68, 70) // C#4, D#4, F#4, G#4, A#4
         return blackNotes.getOrElse(index) { 61 }
+    }
+
+    private companion object {
+        // Black keys use ids starting here in pressedKeyIndex (white keys use 0..7)
+        const val BLACK_KEY_ID_OFFSET = 100
+
+        // The note is released this long after the finger is lifted
+        const val KEY_RELEASE_DELAY_MS = 200L
     }
 }
