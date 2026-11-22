@@ -1,67 +1,68 @@
 package com.example.musicproject.fragmentsModels.Game.piano;
 
-import android.app.Application;
-import android.os.CountDownTimer;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-import com.example.musicproject.database.GameTypes;
+import com.example.musicproject.managers.GameTimer;
+import com.example.musicproject.managers.NotePlayer;
 import com.example.musicproject.managers.ResultManager;
-import com.example.musicproject.managers.SoundManager;
+import com.example.musicproject.models.Event;
 
 import java.util.Random;
 
-public class PianoViewModel extends AndroidViewModel {
+public class PianoViewModel extends ViewModel {
 
     private static final int MIDDLE_C_MIDI_NOTE = 60;
     private static final int NOTES_PER_OCTAVE = 12;
-    private static final long TIMER_TICK_MS = 1000;
+    private static final long GAME_DURATION_MS = 60_000;
 
-    private final SoundManager soundManager;
+    private final NotePlayer notePlayer;
     private final ResultManager resultManager;
+    private final GameTimer timer;
+    private final Random random;
 
     private final MutableLiveData<Long> timeLeft = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> gameEnded = new MutableLiveData<>(false);
-    private CountDownTimer countDownTimer;
-
-    private int targetNote = -1;
-    private int correctCount = 0;
-    private int incorrectCount = 0;
+    private final MutableLiveData<Event<Integer>> gameFinished = new MutableLiveData<>();
+    private final MutableLiveData<Event<Boolean>> answerResult = new MutableLiveData<>();
     private final MutableLiveData<Integer> targetNoteLive = new MutableLiveData<>();
     private final MutableLiveData<Integer> correctCountLive = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> incorrectCountLive = new MutableLiveData<>(0);
+    private int targetNote = -1;
 
-    public PianoViewModel(@NonNull Application application) {
-        super(application);
-        resultManager = ResultManager.create(application, GameTypes.PIANO);
-        soundManager = SoundManager.getInstance();
+    public PianoViewModel(NotePlayer notePlayer, ResultManager resultManager,
+                          GameTimer timer, Random random) {
+        this.notePlayer = notePlayer;
+        this.resultManager = resultManager;
+        this.timer = timer;
+        this.random = random;
+
         generateRandomNote();
+        timer.start(GAME_DURATION_MS, new GameTimer.Listener() {
+            @Override
+            public void onTick(long millisLeft) {
+                timeLeft.setValue(millisLeft / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                timeLeft.setValue(0L);
+                gameFinished.setValue(new Event<>(resultManager.finish()));
+            }
+        });
     }
 
-
     public void playNote(int midiNote) {
-        soundManager.playNote(midiNote);
+        notePlayer.playNote(midiNote);
     }
 
     public void stopNote(int midiNote) {
-        soundManager.stopNote(midiNote);
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if (countDownTimer != null) countDownTimer.cancel();
-    }
-
-    public void generateRandomNote() {
-        targetNote = MIDDLE_C_MIDI_NOTE + new Random().nextInt(NOTES_PER_OCTAVE);
-        targetNoteLive.setValue(targetNote);
+        notePlayer.stopNote(midiNote);
     }
 
     public void checkNote(int playedNote) {
+        if (resultManager.isFinished()) return;
+
         boolean isCorrect = playedNote == targetNote;
         resultManager.recordAnswer(isCorrect);
         if (isCorrect) {
@@ -69,30 +70,19 @@ public class PianoViewModel extends AndroidViewModel {
         } else {
             incorrectCountLive.setValue(resultManager.getIncorrect());
         }
+        answerResult.setValue(new Event<>(isCorrect));
         generateRandomNote(); // draw a new target note
     }
 
-    public void startGameTimer(long durationMillis) {
-        if (countDownTimer != null) countDownTimer.cancel();
-        gameEnded.setValue(false);
-        countDownTimer = new CountDownTimer(durationMillis, TIMER_TICK_MS) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timeLeft.setValue(millisUntilFinished / 1000);
-            }
-
-            @Override
-            public void onFinish() {
-                timeLeft.setValue(0L);
-                gameEnded.setValue(true);
-            }
-        };
-        countDownTimer.start();
+    private void generateRandomNote() {
+        targetNote = MIDDLE_C_MIDI_NOTE + random.nextInt(NOTES_PER_OCTAVE);
+        targetNoteLive.setValue(targetNote);
     }
 
-    public int getCorrectCount() { return resultManager.getCorrect(); }
-    public int getIncorrectCount() { return resultManager.getIncorrect(); }
-    public int finishGame() { return resultManager.finish(); }
+    @Override
+    protected void onCleared() {
+        timer.cancel();
+    }
 
     public LiveData<Integer> getTargetNoteLive() {
         return targetNoteLive;
@@ -110,7 +100,13 @@ public class PianoViewModel extends AndroidViewModel {
         return timeLeft;
     }
 
-    public LiveData<Boolean> isGameEnded() {
-        return gameEnded;
+    /** Emits the final score once, when the time is up. */
+    public LiveData<Event<Integer>> getGameFinished() {
+        return gameFinished;
+    }
+
+    /** Emits true/false once per answer (used for the success/loss animations). */
+    public LiveData<Event<Boolean>> getAnswerResult() {
+        return answerResult;
     }
 }

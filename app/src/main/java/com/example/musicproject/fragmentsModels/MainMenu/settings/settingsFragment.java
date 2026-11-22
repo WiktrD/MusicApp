@@ -14,6 +14,7 @@ import com.example.musicproject.R;
 import com.example.musicproject.fragmentsModels.MainMenu.settings.instruments.InstrumentFragment;
 import com.example.musicproject.fragmentsModels.MainMenu.settings.language.LanguageFragment;
 import com.example.musicproject.fragmentsModels.MainMenu.settings.sound.SoundFragment;
+import com.example.musicproject.managers.ScreenNavigator;
 
 public class SettingsFragment extends Fragment {
 
@@ -26,35 +27,14 @@ public class SettingsFragment extends Fragment {
         Button instrumentButton = view.findViewById(R.id.button_instruments_settings);
         Button languageButton = view.findViewById(R.id.button_language_settings);
 
-        soundButton.setOnClickListener(v -> openSubSetting("settingsSound"));
-        instrumentButton.setOnClickListener(v -> openSubSetting("settingsInstruments"));
-        languageButton.setOnClickListener(v -> openSubSetting("settingsLanguage"));
+        soundButton.setOnClickListener(v -> openScreen(new SoundFragment()));
+        instrumentButton.setOnClickListener(v -> openScreen(new InstrumentFragment()));
+        languageButton.setOnClickListener(v -> openScreen(new LanguageFragment()));
 
         return view;
     }
 
-    private void openSubSetting(String type) {
-        Fragment fragment;
-
-        switch (type) {
-            case "settingsSound":
-                fragment = new SoundFragment();
-                break;
-            case "settingsInstruments":
-                fragment = new InstrumentFragment();
-                break;
-            case "settingsLanguage":
-                fragment = new LanguageFragment();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown setting type: " + type);
-        }
-
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+    private void openScreen(Fragment screen) {
+        ScreenNavigator.open(requireActivity().getSupportFragmentManager(), screen);
     }
 }

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.musicproject.AppViewModelFactory;
 import com.example.musicproject.R;
 import com.example.musicproject.managers.SoundManager;
 
@@ -27,7 +28,8 @@ public class InstrumentFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instrument, container, false);
 
-        viewModel = new ViewModelProvider(this).get(InstrumentViewModel.class);
+        viewModel = new ViewModelProvider(this, new AppViewModelFactory(requireContext()))
+                .get(InstrumentViewModel.class);
 
         Button pianoButton = view.findViewById(R.id.instrument_piano_button);
         Button xylophoneButton = view.findViewById(R.id.instrument_xylofon_button);

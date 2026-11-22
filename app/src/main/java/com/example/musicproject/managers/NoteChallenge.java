@@ -7,9 +7,18 @@ public class NoteChallenge {
 
     private static final String[] NOTE_NAMES = {"C", "D", "E", "F", "G", "A", "B"};
 
+    private final Random random;
+
+    public NoteChallenge() {
+        this(new Random());
+    }
+
+    public NoteChallenge(Random random) {
+        this.random = random;
+    }
+
     public String generateRandomNote() {
-        int index = new Random().nextInt(NOTE_NAMES.length);
-        return NOTE_NAMES[index];
+        return NOTE_NAMES[random.nextInt(NOTE_NAMES.length)];
     }
 
     public boolean checkNoteAnswer(String correctNote, String userAnswer) {

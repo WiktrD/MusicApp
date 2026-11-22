@@ -16,12 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.musicproject.AppViewModelFactory;
 import com.example.musicproject.R;
-import com.example.musicproject.database.AppDatabase;
-import com.example.musicproject.database.GameScore;
-import com.example.musicproject.database.GameTypes;
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment;
 import com.example.musicproject.managers.AnimationManager;
+import com.example.musicproject.managers.ScreenNavigator;
 
 public class QuizFragment extends Fragment {
 
@@ -35,8 +34,8 @@ public class QuizFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(QuizViewModel.class);
-        viewModel.loadQuestionsFromResources(requireContext());
+        viewModel = new ViewModelProvider(this, new AppViewModelFactory(requireContext()))
+                .get(QuizViewModel.class);
     }
 
     @Nullable
@@ -58,10 +57,7 @@ public class QuizFragment extends Fragment {
         nextButton = view.findViewById(R.id.next_button);
 
         viewModel.getCurrentQuestion().observe(getViewLifecycleOwner(), question -> {
-            if (question == null) {
-                saveScoreAndShowResult();
-                return;
-            }
+            if (question == null) return;
 
             questionText.setText(question.getQuestion());
             answer1.setText(question.getOptions().get(0));
@@ -73,13 +69,18 @@ public class QuizFragment extends Fragment {
             selectedAnswerIndex = -1;
         });
 
-        viewModel.getIsAnswerCorrect().observe(getViewLifecycleOwner(), isCorrect -> {
+        viewModel.getAnswerResult().observe(getViewLifecycleOwner(), event -> {
+            Boolean isCorrect = event.getContentIfNotHandled();
             if (isCorrect == null) return;
-            if (isCorrect) {
-                Toast.makeText(getContext(), getString(R.string.correct_answer), Toast.LENGTH_SHORT).show();
-                viewModel.loadNextQuestion();
-            } else {
-                Toast.makeText(getContext(), getString(R.string.incorrect_answer), Toast.LENGTH_SHORT).show();
+            int messageId = isCorrect ? R.string.correct_answer : R.string.incorrect_answer;
+            Toast.makeText(getContext(), getString(messageId), Toast.LENGTH_SHORT).show();
+        });
+
+        viewModel.getQuizFinished().observe(getViewLifecycleOwner(), event -> {
+            Integer score = event.getContentIfNotHandled();
+            if (score != null) {
+                ScreenNavigator.open(requireActivity().getSupportFragmentManager(),
+                        GameResultFragment.newInstance(score));
             }
         });
 
@@ -99,37 +100,5 @@ public class QuizFragment extends Fragment {
         });
 
         return view;
-    }
-
-    private void saveScoreAndShowResult() {
-        int score = viewModel.finishQuiz();
-        int correct = viewModel.getCorrectCount();
-        int incorrect = viewModel.getIncorrectCount();
-
-        GameScore gameScore = new GameScore(
-                0,
-                GameTypes.QUIZ,
-                score,
-                correct,
-                incorrect,
-                System.currentTimeMillis()
-        );
-        AppDatabase db = AppDatabase.Companion.getInstance(requireContext());
-        new Thread(() -> db.scoreDao().insertScoreSync(gameScore)).start();
-
-        // Go to the result screen
-        Bundle bundle = new Bundle();
-        bundle.putInt("score", score);
-        bundle.putInt("correctCount", correct);
-        bundle.putInt("incorrectCount", incorrect);
-
-        GameResultFragment resultFragment = new GameResultFragment();
-        resultFragment.setArguments(bundle);
-
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, resultFragment)
-                .addToBackStack(null)
-                .commit();
     }
 }

@@ -1,99 +1,79 @@
 package com.example.musicproject.fragmentsModels.Game.quiz;
 
-import android.content.Context;
-import android.content.res.Resources;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.musicproject.database.GameTypes;
+import com.example.musicproject.managers.QuestionRepository;
 import com.example.musicproject.managers.ResultManager;
+import com.example.musicproject.models.Event;
 import com.example.musicproject.models.QuizQuestion;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class QuizViewModel extends ViewModel {
 
-    private static final int QUESTION_POOL_SIZE = 15;  // quiz_q1 .. quiz_q15 in strings.xml
     private static final int QUESTIONS_PER_GAME = 5;
 
-    private final MutableLiveData<QuizQuestion> currentQuestion = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isAnswerCorrect = new MutableLiveData<>();
+    private final ResultManager resultManager;
+    private final List<QuizQuestion> questions;
     private int currentQuestionIndex = 0;
 
-    private final List<QuizQuestion> questionList = new ArrayList<>();
+    private final MutableLiveData<QuizQuestion> currentQuestion = new MutableLiveData<>();
+    private final MutableLiveData<Event<Boolean>> answerResult = new MutableLiveData<>();
+    private final MutableLiveData<Event<Integer>> quizFinished = new MutableLiveData<>();
 
-    private int correctCount = 0;
-    private int incorrectCount = 0;
-    private ResultManager resultManager;
+    public QuizViewModel(QuestionRepository repository, ResultManager resultManager, Random random) {
+        this.resultManager = resultManager;
 
-    public void loadQuestionsFromResources(Context context) {
-        questionList.clear();
-        Resources res = context.getResources();
-        String packageName = context.getPackageName();
-        int numberOfQuestions = QUESTION_POOL_SIZE;
+        List<QuizQuestion> pool = new ArrayList<>(repository.loadQuestions());
+        Collections.shuffle(pool, random); // random question order
+        int count = Math.min(QUESTIONS_PER_GAME, pool.size());
+        this.questions = new ArrayList<>(pool.subList(0, count));
 
-        for (int i = 1; i <= numberOfQuestions; i++) {
-            String q = res.getString(res.getIdentifier("quiz_q" + i, "string", packageName));
-            String a = res.getString(res.getIdentifier("quiz_q" + i + "_a", "string", packageName));
-            String b = res.getString(res.getIdentifier("quiz_q" + i + "_b", "string", packageName));
-            String c = res.getString(res.getIdentifier("quiz_q" + i + "_c", "string", packageName));
-            String d = res.getString(res.getIdentifier("quiz_q" + i + "_d", "string", packageName));
-            String correctStr = res.getString(res.getIdentifier("quiz_q" + i + "_correct", "string", packageName));
-            int correctIndex = Integer.parseInt(correctStr) - 1; // A=1 -> 0 index
-            questionList.add(new QuizQuestion(q, Arrays.asList(a, b, c, d), correctIndex));
+        if (questions.isEmpty()) {
+            quizFinished.setValue(new Event<>(resultManager.finish()));
+        } else {
+            currentQuestion.setValue(questions.get(0));
         }
-        Collections.shuffle(questionList); // random question order
-        if (questionList.size() > QUESTIONS_PER_GAME) {
-            questionList.subList(QUESTIONS_PER_GAME, questionList.size()).clear();
-        }
+    }
 
-        resultManager = ResultManager.create(context, GameTypes.QUIZ);
-        currentQuestionIndex = 0;
-        loadQuestion();
+    public void submitAnswer(int selectedIndex) {
+        QuizQuestion question = currentQuestion.getValue();
+        if (question == null || resultManager.isFinished()) return;
+
+        boolean isCorrect = question.getCorrectIndex() == selectedIndex;
+        resultManager.recordAnswer(isCorrect);
+        answerResult.setValue(new Event<>(isCorrect));
+
+        if (isCorrect) {
+            showNextQuestion();
+        }
+    }
+
+    private void showNextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.size()) {
+            currentQuestion.setValue(questions.get(currentQuestionIndex));
+        } else {
+            quizFinished.setValue(new Event<>(resultManager.finish()));
+        }
     }
 
     public LiveData<QuizQuestion> getCurrentQuestion() {
         return currentQuestion;
     }
 
-    public LiveData<Boolean> getIsAnswerCorrect() {
-        return isAnswerCorrect;
+    /** Emits true/false once per submitted answer. */
+    public LiveData<Event<Boolean>> getAnswerResult() {
+        return answerResult;
     }
 
-    public int getCorrectCount() { return resultManager.getCorrect(); }
-    public int getIncorrectCount() { return resultManager.getIncorrect(); }
-    public int finishQuiz() { return resultManager.finish(); }
-
-    public void submitAnswer(int selectedIndex) {
-        QuizQuestion question = currentQuestion.getValue();
-        if (question != null) {
-            boolean isCorrect = question.getCorrectIndex() == selectedIndex;
-            isAnswerCorrect.setValue(isCorrect);
-            if (isCorrect) {
-                correctCount++;
-            } else {
-                incorrectCount++;
-            }
-        }
-    }
-
-    public void loadNextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questionList.size()) {
-            loadQuestion();
-        } else {
-            // quiz finished
-            currentQuestion.setValue(null);
-        }
-    }
-
-    private void loadQuestion() {
-        currentQuestion.setValue(questionList.get(currentQuestionIndex));
-        isAnswerCorrect.setValue(null); // reset
+    /** Emits the final score once, after the last question. */
+    public LiveData<Event<Integer>> getQuizFinished() {
+        return quizFinished;
     }
 }

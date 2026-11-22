@@ -9,12 +9,12 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.musicproject.R;
 import com.example.musicproject.fragmentsModels.Game.piano.PianoFragment;
 import com.example.musicproject.fragmentsModels.Game.quiz.QuizFragment;
 import com.example.musicproject.fragmentsModels.Game.staff.StaffFragment;
+import com.example.musicproject.managers.ScreenNavigator;
 
 public class GameFragment extends Fragment {
     @Nullable
@@ -26,34 +26,14 @@ public class GameFragment extends Fragment {
         Button staffButton = view.findViewById(R.id.button_game_staff);
         Button quizButton = view.findViewById(R.id.button_game_quiz);
 
-        pianoButton.setOnClickListener(v -> openGame("piano"));
-        staffButton.setOnClickListener(v -> openGame("staff"));
-        quizButton.setOnClickListener(v -> openGame("quiz"));
+        pianoButton.setOnClickListener(v -> openGame(new PianoFragment()));
+        staffButton.setOnClickListener(v -> openGame(new StaffFragment()));
+        quizButton.setOnClickListener(v -> openGame(new QuizFragment()));
 
         return view;
     }
 
-    private void openGame(String gameType) {
-        Fragment fragment;
-        switch (gameType) {
-            case "piano":
-                fragment = new PianoFragment();
-                break;
-            case "staff":
-                fragment = new StaffFragment();
-                break;
-            case "quiz":
-                fragment = new QuizFragment();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown game type: " + gameType);
-        }
-
-        FragmentTransaction transaction = requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void openGame(Fragment game) {
+        ScreenNavigator.open(requireActivity().getSupportFragmentManager(), game);
     }
 }

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import org.billthefarmer.mididriver.MidiDriver;
 
-public class SoundManager implements MidiDriver.OnMidiStartListener {
+public class SoundManager implements MidiDriver.OnMidiStartListener, NotePlayer, InstrumentSelector {
 
     // General MIDI program numbers used by the instrument settings
     public static final int PROGRAM_GRAND_PIANO = 0;
@@ -39,6 +39,7 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
         return instance;
     }
 
+    @Override
     public void playNote(int note) {
         byte[] msg = new byte[3];
         msg[0] = (byte) STATUS_NOTE_ON;
@@ -48,6 +49,7 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
         Log.d(TAG, "Note ON: " + note);
     }
 
+    @Override
     public void stopNote(int note) {
         byte[] msg = new byte[3];
         msg[0] = (byte) STATUS_NOTE_OFF;
@@ -57,6 +59,7 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
         Log.d(TAG, "Note OFF " + note);
     }
 
+    @Override
     public void changeInstrument(int programNumber) {
         if (programNumber < 0 || programNumber > MAX_MIDI_VALUE) {
             Log.w(TAG, "Invalid instrument number: " + programNumber);
@@ -83,6 +86,7 @@ public class SoundManager implements MidiDriver.OnMidiStartListener {
         this.volumePercent = volumePercent;
     }
 
+    @Override
     public void playNoteByName(String noteName, int delayMillis) {
         int midiNote = convertNoteToMidiValue(noteName);
         if (midiNote != -1) {

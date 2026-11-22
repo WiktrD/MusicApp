@@ -15,6 +15,7 @@ import com.example.musicproject.GameActivity;
 import com.example.musicproject.R;
 import com.example.musicproject.fragmentsModels.MainMenu.score.ScoreFragment;
 import com.example.musicproject.fragmentsModels.MainMenu.settings.SettingsFragment;
+import com.example.musicproject.managers.ScreenNavigator;
 
 public class MainMenuFragment extends Fragment {
 
@@ -32,32 +33,14 @@ public class MainMenuFragment extends Fragment {
             Intent intent = new Intent(requireContext(), GameActivity.class);
             startActivity(intent);
         });
-        buttonSettings.setOnClickListener(v -> openFragment("settings"));
-        buttonScore.setOnClickListener(v -> openFragment("results"));
+        buttonSettings.setOnClickListener(v -> openScreen(new SettingsFragment()));
+        buttonScore.setOnClickListener(v -> openScreen(new ScoreFragment()));
         buttonQuit.setOnClickListener(v -> requireActivity().finishAffinity());
 
         return view;
     }
 
-    private void openFragment(String type) {
-        Fragment fragment;
-
-        switch (type) {
-            case "settings":
-                fragment = new SettingsFragment();
-                break;
-            case "results":
-                fragment = new ScoreFragment();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown fragment type: " + type);
-        }
-
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+    private void openScreen(Fragment screen) {
+        ScreenNavigator.open(requireActivity().getSupportFragmentManager(), screen);
     }
 }

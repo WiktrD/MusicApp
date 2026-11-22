@@ -49,6 +49,7 @@ public class ResultManager {
 
     public int getScore() { return correct - incorrect; }
 
+    public boolean isFinished() { return finished; }
 
     /** Saves the result on the first call; later calls only return the score. */
     public int finish() {

@@ -11,6 +11,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.example.musicproject.R
 import com.example.musicproject.fragmentsModels.MainMenu.MainMenuFragment
 import com.example.musicproject.managers.AnimationManager
+import com.example.musicproject.managers.ScreenNavigator
 
 class GameResultFragment : Fragment() {
 
@@ -27,26 +28,28 @@ class GameResultFragment : Fragment() {
         val fanfareAnim = view.findViewById<LottieAnimationView>(R.id.lottie_fanfare)
         AnimationManager.showLottieAnimation(fanfareAnim)
 
-        // Read the score passed in the arguments
-        val score = arguments?.getInt("score", 0) ?: 0
+        val score = arguments?.getInt(ARG_SCORE, 0) ?: 0
 
         val scoreText = view.findViewById<TextView>(R.id.score_value)
         scoreText.text = score.toString()
 
         // "Play again" button: back to the game selection screen
         view.findViewById<Button>(R.id.button_play_again).setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, GameFragment())
-                .addToBackStack(null)
-                .commit()
+            ScreenNavigator.open(parentFragmentManager, GameFragment())
         }
 
         // "Back to menu" button
         view.findViewById<Button>(R.id.button_backToMenu).setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, MainMenuFragment())
-                .addToBackStack(null)
-                .commit()
+            ScreenNavigator.open(parentFragmentManager, MainMenuFragment())
+        }
+    }
+
+    companion object {
+        private const val ARG_SCORE = "score"
+
+        @JvmStatic
+        fun newInstance(score: Int): GameResultFragment = GameResultFragment().apply {
+            arguments = Bundle().apply { putInt(ARG_SCORE, score) }
         }
     }
 }

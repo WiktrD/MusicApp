@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.example.atmusic.PianoView
+import com.example.musicproject.AppViewModelFactory
 import com.example.musicproject.R
 import com.example.musicproject.fragmentsModels.Game.GameResultFragment
 import com.example.musicproject.managers.AnimationManager
+import com.example.musicproject.managers.ScreenNavigator
 
 class PianoFragment : Fragment() {
 
@@ -24,7 +26,7 @@ class PianoFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_piano, container, false)
         val pianoView = view.findViewById<PianoView>(R.id.piano_view)
-        viewModel = ViewModelProvider(this)[PianoViewModel::class.java]
+        viewModel = ViewModelProvider(this, AppViewModelFactory(requireContext()))[PianoViewModel::class.java]
         pianoView.setOnKeyReleasedListener { midiNote ->
             viewModel.stopNote(midiNote)
         }
@@ -37,25 +39,17 @@ class PianoFragment : Fragment() {
         val introAnim = view.findViewById<LottieAnimationView>(R.id.lottie_intro)
         AnimationManager.showLottieAnimation(introAnim)
 
-        viewModel.startGameTimer(GAME_DURATION_MS)
-
         val timeText = view.findViewById<TextView>(R.id.time_text)
-        viewModel.timeLeft.observe(viewLifecycleOwner) { time ->
-            timeText.text = "$time s"
-        }
-
-        viewModel.isGameEnded().observe(viewLifecycleOwner) { ended ->
-            if (ended) {
-                saveScoreAndShowResult()
-            }
-        }
-
         val correctText = view.findViewById<TextView>(R.id.correct_note)
         val incorrectText = view.findViewById<TextView>(R.id.wrong_note)
         val noteText = view.findViewById<TextView>(R.id.random_note)
         val pianoView = view.findViewById<PianoView>(R.id.piano_view)
         val successAnim = view.findViewById<LottieAnimationView>(R.id.lottie_success)
         val lossAnim = view.findViewById<LottieAnimationView>(R.id.lottie_loss)
+
+        viewModel.timeLeft.observe(viewLifecycleOwner) { time ->
+            timeText.text = "$time s"
+        }
 
         viewModel.targetNoteLive.observe(viewLifecycleOwner) { midi ->
             val noteName = midiToNoteName(midi)
@@ -70,31 +64,22 @@ class PianoFragment : Fragment() {
             incorrectText.text = "$incorrect"
         }
 
-        pianoView.setOnKeyPressedListener { midiNote ->
-            val beforeCorrect = viewModel.correctCount
-            val beforeIncorrect = viewModel.incorrectCount
-
-            viewModel.checkNote(midiNote)
-            viewModel.playNote(midiNote)
-
-            val afterCorrect = viewModel.correctCount
-            val afterIncorrect = viewModel.incorrectCount
-
-            if (afterCorrect > beforeCorrect) {
-                AnimationManager.showLottieAnimation(successAnim)
-            } else if (afterIncorrect > beforeIncorrect) {
-                AnimationManager.showLottieAnimation(lossAnim)
+        viewModel.answerResult.observe(viewLifecycleOwner) { event ->
+            event.contentIfNotHandled?.let { isCorrect ->
+                AnimationManager.showLottieAnimation(if (isCorrect) successAnim else lossAnim)
             }
         }
-    }
 
-    private fun saveScoreAndShowResult() {
-        val score = viewModel.finishGame()
-        val bundle = Bundle().apply { putInt("score", score) }
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, GameResultFragment().apply { arguments = bundle })
-            .addToBackStack(null)
-            .commit()
+        viewModel.gameFinished.observe(viewLifecycleOwner) { event ->
+            event.contentIfNotHandled?.let { score ->
+                ScreenNavigator.open(parentFragmentManager, GameResultFragment.newInstance(score))
+            }
+        }
+
+        pianoView.setOnKeyPressedListener { midiNote ->
+            viewModel.checkNote(midiNote)
+            viewModel.playNote(midiNote)
+        }
     }
 
     private fun midiToNoteName(midi: Int): String {
@@ -102,9 +87,5 @@ class PianoFragment : Fragment() {
         val note = noteNames[midi % 12]
         val octave = midi / 12 - 1
         return "$note$octave"
-    }
-
-    private companion object {
-        const val GAME_DURATION_MS = 60_000L
     }
 }
